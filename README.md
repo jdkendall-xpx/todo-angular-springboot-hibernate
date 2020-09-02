@@ -1,2 +1,2 @@
-# todo-angular-springboot-hibernate
-A simple to-do application with Angular frontend and Java (Spring Boot + Hibernate) backend, with MySQL database.
+# ToDo Tracker
+A simple to-do tracking application with an Angular frontend and a Java (Spring Boot + Hibernate) API backend, with MySQL database.
