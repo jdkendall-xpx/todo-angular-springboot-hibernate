@@ -5,10 +5,10 @@ You can then use `curl` or Postman to make requests to the API while this is run
 
 #### Curl
 ```bash
-curl 'http://localhost:8080/api/todos'
+curl 'http://localhost:8081/api/todos'
 ```
 
 #### Postman
 - Create a new request
 - Choose `GET` verb
-- URL is `http://localhost:8080/api/todos`
+- URL is `http://localhost:8081/api/todos`
