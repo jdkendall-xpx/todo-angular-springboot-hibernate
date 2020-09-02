@@ -6,7 +6,7 @@ This provides the data to the frontend for the todo entries. It is a REST API (n
 
 ## Frontend ([frontend](/frontend/README.md))
 -- Under construction --
-The frontend will provide the website for viewing, creating, updating, and deleting todo entries. This will be built with Angular, a common framework used on clients. It will communicate with the API 
+The frontend will provide the website for viewing, creating, updating, and deleting todo entries. This will be built with Angular, a common framework used on clients. It will communicate with the API in a similar fashion to Postman/`curl`, via HTTP verbs (GET/POST/PUT/DELETE) and URLs.
 
 ## Database
 ToDo Tracker uses a MySQL database hosted in the AWS RDS cloud, instead of a locally hosted database; this is similar to how you would encounter databases on a customer project. The URL and credentials for this database will be provided individually, with each user receiving their own schema on the database to use as they see fit for their copy of the application.
