@@ -11,6 +11,8 @@ import {TodoListComponent} from './pages/home/widgets/todo-list/todo-list.compon
 import {TodoEditorComponent} from './pages/edit-todo/widgets/todo-editor/todo-editor.component';
 import {TodoWriterComponent} from './pages/create-todo/widgets/todo-writer/todo-writer.component';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {MatCardModule} from '@angular/material/card';
+import {MatIconModule} from '@angular/material/icon';
 
 @NgModule({
   declarations: [
@@ -25,7 +27,9 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
   imports: [
     BrowserModule,
     AppRoutingModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    MatCardModule,
+    MatIconModule
   ],
   providers: [TodoApiService],
   bootstrap: [AppComponent]
