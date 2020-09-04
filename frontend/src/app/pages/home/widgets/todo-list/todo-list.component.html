@@ -1,1 +1,15 @@
-<p>todo-list works!</p>
+<div class="m-auto">
+  <mat-card *ngFor="let todo of $todos | async" class="m-5">
+    <mat-card-title>
+      <span style="vertical-align: middle">
+        <mat-icon [inline]="true" *ngIf="todo.completed">check_box</mat-icon>
+        <mat-icon [inline]="true" *ngIf="!todo.completed">check_box_outline_blank</mat-icon>
+      </span>
+      {{todo.title}}
+    </mat-card-title>
+    <mat-card-content>
+      <div><span>Created:&nbsp;{{todo.createdAt}}</span></div>
+      <div><span>Description:&nbsp;{{todo.description}}</span></div>
+    </mat-card-content>
+  </mat-card>
+</div>

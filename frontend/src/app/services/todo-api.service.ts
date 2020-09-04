@@ -6,7 +6,12 @@ import {TodoEntry} from '../domain/todoEntry';
 })
 export class TodoApiService {
 
-  private todos: TodoEntry[] = [];
+  private todos: TodoEntry[] = [
+    {completed: false, createdAt: '', description: 'Here be A', id: 1, title: 'A'},
+    {completed: true, createdAt: '', description: 'Thar be B', id: 1, title: 'B'},
+    {completed: true, createdAt: '', description: 'Whar be C?', id: 1, title: 'C'},
+    {completed: false, createdAt: '', description: 'Hardy har dee D!', id: 1, title: 'D'},
+  ];
 
   constructor() {
   }
