@@ -16,7 +16,21 @@ export class TodoListComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // Ask the API for the todo list, then publish it to our subject
-    this.todoApiService.getTodoList().then(result => this.$todos.next(result));
+    // Load the todo list for the first time
+    this.updateTodoList();
+  }
+
+  private updateTodoList(): void {
+    // Ask the API for the todo list,
+    // then publish it to our subject
+    this.todoApiService.getTodoList()
+      .then(result => this.$todos.next(result));
+  }
+
+  onToggleCompleted(todo: TodoEntry): void {
+    // Update our Todo entry with toggled completion state
+    // Then trigger a refresh of the todo list
+    this.todoApiService.updateTodo({...todo, completed: !todo.completed})
+      .then(_ => this.updateTodoList());
   }
 }

@@ -8,9 +8,9 @@ export class TodoApiService {
 
   private todos: TodoEntry[] = [
     {completed: false, createdAt: '', description: 'Here be A', id: 1, title: 'A'},
-    {completed: true, createdAt: '', description: 'Thar be B', id: 1, title: 'B'},
-    {completed: true, createdAt: '', description: 'Whar be C?', id: 1, title: 'C'},
-    {completed: false, createdAt: '', description: 'Hardy har dee D!', id: 1, title: 'D'},
+    {completed: true, createdAt: '', description: 'Thar be B', id: 2, title: 'B'},
+    {completed: true, createdAt: '', description: 'Whar be C?', id: 3, title: 'C'},
+    {completed: false, createdAt: '', description: 'Hardy har dee D!', id: 4, title: 'D'},
   ];
 
   constructor() {
@@ -37,5 +37,12 @@ export class TodoApiService {
 
     this.todos = this.todos.filter(todo => todo.id !== entryId);
     return;
+  }
+
+  async updateTodo(updatedEntry: TodoEntry): Promise<TodoEntry> {
+    const index = this.todos.findIndex(entry => entry.id === updatedEntry.id);
+    console.log('index found was ' + index);
+    this.todos[index] = updatedEntry;
+    return updatedEntry;
   }
 }

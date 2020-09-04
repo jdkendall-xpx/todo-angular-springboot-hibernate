@@ -13,6 +13,7 @@ import {TodoWriterComponent} from './pages/create-todo/widgets/todo-writer/todo-
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {MatCardModule} from '@angular/material/card';
 import {MatIconModule} from '@angular/material/icon';
+import {ToggleCheckboxComponent} from './common/components/toggle-checkbox/toggle-checkbox.component';
 
 @NgModule({
   declarations: [
@@ -23,6 +24,7 @@ import {MatIconModule} from '@angular/material/icon';
     TodoListComponent,
     TodoEditorComponent,
     TodoWriterComponent,
+    ToggleCheckboxComponent,
   ],
   imports: [
     BrowserModule,
