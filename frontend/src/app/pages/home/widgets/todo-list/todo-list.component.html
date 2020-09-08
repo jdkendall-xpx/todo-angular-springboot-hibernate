@@ -1,12 +1,5 @@
-<div class="m-auto">
-  <mat-card *ngFor="let todo of $todos | async" class="m-5">
-    <mat-card-title>
-      <app-toggle-checkbox [state]="todo.completed" (toggle)="onToggleCompleted(todo)"></app-toggle-checkbox>
-      {{todo.title}}
-    </mat-card-title>
-    <mat-card-content>
-      <div><span>Created:&nbsp;{{todo.createdAt}}</span></div>
-      <div><span>Description:&nbsp;{{todo.description}}</span></div>
-    </mat-card-content>
-  </mat-card>
+<div fxLayout="row wrap" fxLayoutAlign="space-between" class="card-deck-container m-auto">
+  <div *ngFor="let todo of $todos | async">
+    <app-todo-card [todo]="todo" (toggle)="onToggleCompleted(todo)"></app-todo-card>
+  </div>
 </div>

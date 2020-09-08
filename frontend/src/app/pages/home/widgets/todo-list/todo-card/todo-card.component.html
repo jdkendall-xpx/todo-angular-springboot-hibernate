@@ -1,0 +1,16 @@
+<mat-card class="todo-card mat-elevation-z8">
+  <mat-card-title>
+    <app-toggle-checkbox [state]="todo.completed" (toggle)="onToggle()"></app-toggle-checkbox>
+    {{todo.title}}
+  </mat-card-title>
+  <mat-card-content>
+    <div>
+      <mat-icon [inline]="true" class="pr-1">event</mat-icon>
+      <span>{{todo.createdAt}}</span></div>
+    <hr/>
+    <div>
+      <mat-icon [inline]="true"></mat-icon>
+      <span>{{todo.description}}</span></div>
+  </mat-card-content>
+</mat-card>
+

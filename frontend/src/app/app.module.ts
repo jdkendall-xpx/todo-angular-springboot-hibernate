@@ -18,6 +18,8 @@ import {MatSidenavModule} from '@angular/material/sidenav';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatButtonModule} from '@angular/material/button';
 import {MatListModule} from '@angular/material/list';
+import {TodoCardComponent} from './pages/home/widgets/todo-list/todo-card/todo-card.component';
+import {FlexModule} from '@angular/flex-layout';
 
 @NgModule({
   declarations: [
@@ -29,6 +31,7 @@ import {MatListModule} from '@angular/material/list';
     TodoEditorComponent,
     TodoWriterComponent,
     ToggleCheckboxComponent,
+    TodoCardComponent,
   ],
   imports: [
     BrowserModule,
@@ -39,7 +42,8 @@ import {MatListModule} from '@angular/material/list';
     MatSidenavModule,
     MatToolbarModule,
     MatButtonModule,
-    MatListModule
+    MatListModule,
+    FlexModule
   ],
   providers: [TodoApiService],
   bootstrap: [AppComponent]
