@@ -7,10 +7,16 @@ import {TodoEntry} from '../domain/todoEntry';
 export class TodoApiService {
 
   private todos: TodoEntry[] = [
-    {completed: false, createdAt: '', description: 'Here be A', id: 1, title: 'A'},
-    {completed: true, createdAt: '', description: 'Thar be B', id: 2, title: 'B'},
-    {completed: true, createdAt: '', description: 'Whar be C?', id: 3, title: 'C'},
-    {completed: false, createdAt: '', description: 'Hardy har dee D!', id: 4, title: 'D'},
+    {completed: false, createdAt: new Date('2020-09-08T07:27:49.000Z'), description: 'Here be A', id: 1, title: 'A'},
+    {completed: true, createdAt: new Date('2020-09-03T11:54:33.000Z'), description: 'Thar be B', id: 2, title: 'B'},
+    {completed: true, createdAt: new Date('2020-09-03T12:16:43.000Z'), description: 'Whar be C?', id: 3, title: 'C'},
+    {
+      completed: false,
+      createdAt: new Date('2020-08-31T11:01:10.000Z'),
+      description: 'Hardy har dee D!',
+      id: 4,
+      title: 'D'
+    },
   ];
 
   constructor() {
