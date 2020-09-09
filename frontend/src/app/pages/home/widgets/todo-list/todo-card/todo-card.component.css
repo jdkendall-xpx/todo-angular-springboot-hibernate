@@ -3,3 +3,29 @@
   min-height: 200px;
   margin: 10px;
 }
+
+.edit-hover .edit-button {
+  visibility: hidden;
+}
+
+.edit-hover :hover .edit-button {
+  visibility: visible;
+}
+
+.edit-button a {
+  cursor: pointer;
+  color: inherit;
+}
+
+.edit-button :hover {
+  color: hsl(270, 50%, 70%);
+}
+
+.card-title {
+  font-size: 0.8em;
+  line-height: 1.25em;
+}
+
+.card-description {
+
+}

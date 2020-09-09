@@ -1,7 +1,22 @@
-<mat-card class="todo-card mat-elevation-z8">
+<mat-card class="todo-card mat-elevation-z8 edit-hover">
   <mat-card-title>
-    <app-toggle-checkbox [state]="todo.completed" (toggle)="onToggle()"></app-toggle-checkbox>
-    {{todo.title}}
+    <div fxLayout="row" fxLayoutAlign="start stretch" class="pr-4">
+      <div fxFlexFill fxFlexAlign="start" class="card-title">
+        <div fxLayout="row" fxLayoutGap=".4em">
+          <div fxFlexAlign="stretch">
+            <app-toggle-checkbox [state]="todo.completed" (toggle)="onToggle()"></app-toggle-checkbox>
+          </div>
+          <div>{{todo.title}}</div>
+        </div>
+      </div>
+      <div fxFlexAlign="stretch">
+        <div class="edit-button">
+          <a routerLink="/edit/{{todo.id}}">
+            <mat-icon [inline]="true">edit</mat-icon>
+          </a>
+        </div>
+      </div>
+    </div>
   </mat-card-title>
   <mat-card-content>
     <div>
