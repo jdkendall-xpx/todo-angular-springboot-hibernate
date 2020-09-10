@@ -14,19 +14,21 @@ import java.util.Optional;
 @RequestMapping("/api")
 @CrossOrigin("*")
 public class TodoController {
-
     @Autowired
     TodoRepository todoRepository;
 
     @GetMapping("/todos")
     public List<TodoEntry> getAllTodos() {
-        Sort sortByCreatedAtDesc = Sort.by(Sort.Direction.DESC, "createdAt");
-        return todoRepository.findAll(sortByCreatedAtDesc);
+        // Decide how we want to sort our database results -- here we want to go by createdAt column in descending order
+        Sort sortByCreatedAt = Sort.by(Sort.Direction.DESC, "createdAt");
+
+        // Return all found results
+        return todoRepository.findAll(sortByCreatedAt);
     }
 
     @PostMapping("/todos")
     public TodoEntry createTodo(@RequestBody TodoEntry todo) {
-        todo.setCompleted(false);
+        // Save our entry to the database and return the saved entry
         return todoRepository.save(todo);
     }
 
