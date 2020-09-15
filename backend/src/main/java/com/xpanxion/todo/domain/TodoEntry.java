@@ -1,5 +1,6 @@
 package com.xpanxion.todo.domain;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -10,9 +11,16 @@ public class TodoEntry {
     @Id
     @GeneratedValue
     private Long id;
+
+    @Column(columnDefinition = "TEXT")
     private String title;
+
+    @Column(columnDefinition = "MEDIUMTEXT")
     private String description;
+
+    @Column(length = 24)
     private String createdAt;
+
     private Boolean completed;
 
     public TodoEntry() {
