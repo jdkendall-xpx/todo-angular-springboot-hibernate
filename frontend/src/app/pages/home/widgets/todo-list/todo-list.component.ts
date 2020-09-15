@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {TodoApiService} from '../../../../services/todo-api.service';
 import {TodoEntry} from '../../../../domain/todoEntry';
-import {BehaviorSubject} from 'rxjs';
+import {TodoListModel} from './todo-list.model';
 
 @Component({
   selector: 'app-todo-list',
@@ -10,27 +10,20 @@ import {BehaviorSubject} from 'rxjs';
 })
 export class TodoListComponent implements OnInit {
 
-  $todos: BehaviorSubject<TodoEntry[]> = new BehaviorSubject<TodoEntry[]>([]);
+  model: TodoListModel;
 
   constructor(private todoApiService: TodoApiService) {
+    this.model = new TodoListModel(this.todoApiService);
   }
 
   ngOnInit(): void {
     // Load the todo list for the first time
-    this.updateTodoList();
+    this.model.updateTodoList();
+    this.model.$todos.subscribe(next => console.table(next[1]));
   }
 
-  private updateTodoList(): void {
-    // Ask the API for the todo list,
-    // then publish it to our subject
-    this.todoApiService.getTodoList()
-      .then(result => this.$todos.next(result));
-  }
-
-  onToggleCompleted(todo: TodoEntry): void {
+  onToggleTodoCompletedState(todo: TodoEntry): void {
     // Update our Todo entry with toggled completion state
-    // Then trigger a refresh of the todo list
-    this.todoApiService.updateTodo({...todo, completed: !todo.completed})
-      .then(_ => this.updateTodoList());
+    this.model.toggleTodoCompletedState(todo);
   }
 }

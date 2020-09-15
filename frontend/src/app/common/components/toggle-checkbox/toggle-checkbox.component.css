@@ -1,0 +1,8 @@
+.checkbox-container {
+  vertical-align: middle;
+  cursor: pointer;
+}
+
+.checkbox-container ::selection {
+  background: none;
+}

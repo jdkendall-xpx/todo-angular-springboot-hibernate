@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {TodoEntry} from '../../../../../domain/todoEntry';
+import {TodoModelState} from '../todo-list.model';
 
 @Component({
   selector: 'app-todo-card',
@@ -8,7 +8,7 @@ import {TodoEntry} from '../../../../../domain/todoEntry';
 })
 export class TodoCardComponent implements OnInit {
 
-  @Input() todo: TodoEntry;
+  @Input() todo: TodoModelState;
   @Output() toggle = new EventEmitter();
 
   constructor() {

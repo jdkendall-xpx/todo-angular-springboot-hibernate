@@ -1,6 +1,7 @@
 .todo-card {
   min-width: 300px;
   min-height: 200px;
+  max-width: 300px;
   margin: 10px;
 }
 
@@ -28,4 +29,23 @@
 
 .card-description {
 
+}
+
+.pending {
+  color: gray;
+}
+
+.error {
+  color: red;
+}
+
+.errorFloater {
+  position: absolute;
+  left: -10em;
+  font-size: 0.6em;
+  background: darkred;
+  color: white;
+  font-weight: bold;
+  padding-right: 1em;
+  padding-left: 1em;
 }

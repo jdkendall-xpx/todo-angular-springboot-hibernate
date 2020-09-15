@@ -7,6 +7,7 @@ import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 })
 export class ToggleCheckboxComponent implements OnInit {
   @Input() state: boolean;
+  @Input() pending: boolean;
   @Output() toggle = new EventEmitter();
 
   constructor() {

@@ -20,6 +20,7 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatListModule} from '@angular/material/list';
 import {TodoCardComponent} from './pages/home/widgets/todo-list/todo-card/todo-card.component';
 import {FlexModule} from '@angular/flex-layout';
+import {HttpClientModule} from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -43,7 +44,8 @@ import {FlexModule} from '@angular/flex-layout';
     MatToolbarModule,
     MatButtonModule,
     MatListModule,
-    FlexModule
+    FlexModule,
+    HttpClientModule
   ],
   providers: [TodoApiService],
   bootstrap: [AppComponent]
