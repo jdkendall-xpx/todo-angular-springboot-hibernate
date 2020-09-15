@@ -2,6 +2,7 @@ import {BehaviorSubject, Observable, throwError} from 'rxjs';
 import {TodoEntry} from '../../../../domain/todoEntry';
 import {TodoApiService} from '../../../../services/todo-api.service';
 import {catchError, map, tap} from 'rxjs/operators';
+import {replaceFirst} from '../../../../common/util/utilities';
 
 export interface TodoModelState extends TodoEntry {
   dirty?: boolean;
@@ -53,11 +54,4 @@ export class TodoListModel {
 
 function ifIdsMatch(curObj: TodoModelState, newObj: TodoModelState): boolean {
   return curObj.id === newObj.id;
-}
-
-function replaceFirst<T>(current: T[], newObj: T, compare: (e: T, n: T) => boolean): T[] {
-  const indexToUpdate = current.findIndex(obj => compare(newObj, obj));
-  const updated = [...current];
-  updated[indexToUpdate] = newObj;
-  return updated;
 }
