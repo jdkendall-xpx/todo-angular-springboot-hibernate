@@ -1,8 +1,21 @@
 .todo-card {
+  min-height: 275px;
   min-width: 300px;
-  min-height: 200px;
-  max-width: 300px;
-  margin: 10px;
+  max-width: 350px;
+  margin: 4px 4px;
+}
+
+@media screen and (max-width: 400px) {
+  .todo-card {
+    min-width: 300px;
+    max-width: 300px;
+  }
+}
+
+@media screen and (min-width: 400px) and (max-width: 959px) {
+  .todo-card {
+    min-width: 350px;
+  }
 }
 
 .edit-hover .edit-button {

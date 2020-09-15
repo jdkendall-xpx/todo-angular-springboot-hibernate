@@ -1,5 +1,9 @@
-<div fxLayout="row wrap" fxLayoutAlign="space-between" class="card-deck-container m-auto">
-  <div *ngFor="let todo of model.$todos | async" fxFlex="1 0 20%;">
-    <app-todo-card [todo]="todo" (toggle)="onToggleTodoCompletedState(todo)"></app-todo-card>
-  </div>
+<div class="card-deck-container"
+     fxLayout="row wrap" fxLayoutAlign="center" fxLayoutGap="10px grid"
+     fxLayout.lt-md="column" fxLayoutAlign.lt-md="start center">
+  <ng-container *ngFor="let todo of model.$todos | async">
+    <app-todo-card
+      [todo]="todo" (toggle)="onToggleTodoCompletedState(todo)"
+      class="todo-card"></app-todo-card>
+  </ng-container>
 </div>
