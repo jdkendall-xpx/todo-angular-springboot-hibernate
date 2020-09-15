@@ -38,7 +38,7 @@ public class TodoController {
             // Turn our string into an ID number
             long id = Long.parseLong(idString);
 
-            // Get our todo entry from the database
+            // Get our to-do entry from the database
             Optional<TodoEntry> originalEntry = todoRepository.findById(id);
 
             // Check if we found an entry
@@ -46,7 +46,7 @@ public class TodoController {
                 // Use the entry's data
                 TodoEntry entryData = originalEntry.get();
 
-                // Return the todo entry inside a 200 OK response
+                // Return the to-do entry inside a 200 OK response
                 return ResponseEntity.ok().body(entryData);
             } else {
                 // Return a 404 Not Found status, since we didn't find the entry
@@ -64,7 +64,7 @@ public class TodoController {
             // Turn our string into an ID number
             long id = Long.parseLong(idString);
 
-            // Get our todo entry from the database
+            // Get our to-do entry from the database
             Optional<TodoEntry> originalEntry = todoRepository.findById(id);
 
             // Check if we found an entry

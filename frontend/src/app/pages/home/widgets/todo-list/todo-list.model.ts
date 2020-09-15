@@ -30,6 +30,7 @@ export class TodoListModel {
   }
 
   toggleTodoCompletedState(todo: TodoModelState): void {
+    // Ignore attempts to change a dirty/pending component
     if (todo.dirty) {
       return;
     }
@@ -39,13 +40,15 @@ export class TodoListModel {
 
     this.todoApi.updateTodo(updated as TodoEntry)
       .pipe(
+        // For good values, map response to the model & update our current entry with fresh state
         map(n => n as TodoModelState),
+        tap((value) => {
+          this.updateTodoEntry({...value, dirty: false, error: false});
+        }),
+        // For error values, rewind to old to-do entry value and set error state
         catchError((err) => {
           this.updateTodoEntry({...todo, dirty: false, error: true});
           return throwError(err);
-        }),
-        tap((value) => {
-          this.updateTodoEntry({...value, dirty: false, error: false});
         })
       )
       .subscribe();

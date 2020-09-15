@@ -17,13 +17,13 @@ export class TodoListComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // Load the todo list for the first time
+    // Load the to-do list for the first time
     this.model.updateTodoList();
     this.model.$todos.subscribe(next => console.table(next[1]));
   }
 
   onToggleTodoCompletedState(todo: TodoEntry): void {
-    // Update our Todo entry with toggled completion state
+    // Update our to-do entry with toggled completion state
     this.model.toggleTodoCompletedState(todo);
   }
 }
