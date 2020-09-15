@@ -1,3 +1,4 @@
-export const environment = {
-  production: true
-};
+export const environment = Object.freeze({
+  production: true,
+  todoApi: ''
+});
