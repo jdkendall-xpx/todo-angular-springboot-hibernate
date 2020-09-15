@@ -8,3 +8,23 @@
   font-size: 3em;
   line-height: 1em;
 }
+
+.mat-icon {
+  vertical-align: middle;
+  text-align: center;
+  font-weight: bolder;
+}
+
+@media screen and (max-width: 400px) {
+  .create-new-todo-btn {
+    position: fixed;
+    right: 5%;
+    bottom: 5%;
+  }
+}
+
+@media screen and (min-width: 400px) {
+  .create-new-todo-btn {
+    margin-left: 15px;
+  }
+}
