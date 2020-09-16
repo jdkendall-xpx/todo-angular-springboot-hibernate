@@ -10,9 +10,22 @@
 }
 
 .mat-icon {
-  vertical-align: middle;
-  text-align: center;
-  font-weight: bolder;
+  font-weight: bold;
+  transform: scale(1.5);
+  transition: 0.3s;
+}
+
+.create-new-todo-btn :hover {
+  transform: scale(1.75);
+}
+
+@keyframes icon-grow {
+  from {
+    transform: scale(1.5)
+  }
+  to {
+    transform: scale(1.75)
+  }
 }
 
 @media screen and (max-width: 400px) {

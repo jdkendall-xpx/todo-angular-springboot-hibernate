@@ -1,7 +1,6 @@
-import {Component, OnInit} from '@angular/core';
-import {TodoApiService} from '../../../../services/todo-api.service';
+import {Component, Input, OnInit} from '@angular/core';
 import {TodoEntry} from '../../../../domain/todoEntry';
-import {TodoListModel} from './todo-list.model';
+import {TodoListModel, TodoModelState} from './todo-list.model';
 
 @Component({
   selector: 'app-todo-list',
@@ -10,20 +9,21 @@ import {TodoListModel} from './todo-list.model';
 })
 export class TodoListComponent implements OnInit {
 
+  @Input()
   model: TodoListModel;
 
-  constructor(private todoApiService: TodoApiService) {
-    this.model = new TodoListModel(this.todoApiService);
+  constructor() {
   }
 
   ngOnInit(): void {
-    // Load the to-do list for the first time
-    this.model.updateTodoList();
-    this.model.$todos.subscribe(next => console.table(next[1]));
   }
 
   onToggleTodoCompletedState(todo: TodoEntry): void {
     // Update our to-do entry with toggled completion state
     this.model.toggleTodoCompletedState(todo);
+  }
+
+  onEditCard(_: TodoModelState): void {
+    // TODO
   }
 }

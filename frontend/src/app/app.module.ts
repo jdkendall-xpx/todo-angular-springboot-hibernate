@@ -4,11 +4,11 @@ import {NgModule} from '@angular/core';
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
 import {HomeComponent} from './pages/home/home.component';
-import {CreateTodoComponent} from './pages/home/widgets/create-todo-dialog/create-todo.component';
-import {EditTodoComponent} from './pages/edit-todo/edit-todo.component';
+import {CreateTodoDialogComponent} from './pages/home/widgets/create-todo-dialog/create-todo-dialog.component';
+import {EditTodoDialogComponent} from './pages/home/widgets/edit-todo-dialog/edit-todo-dialog.component';
 import {TodoApiService} from './services/todo-api.service';
 import {TodoListComponent} from './pages/home/widgets/todo-list/todo-list.component';
-import {TodoEditorComponent} from './pages/edit-todo/widgets/todo-editor/todo-editor.component';
+import {TodoEditorComponent} from './pages/home/widgets/edit-todo-dialog/widgets/todo-editor/todo-editor.component';
 import {TodoWriterComponent} from './pages/home/widgets/create-todo-dialog/widgets/todo-writer/todo-writer.component';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {MatCardModule} from '@angular/material/card';
@@ -21,13 +21,20 @@ import {MatListModule} from '@angular/material/list';
 import {TodoCardComponent} from './pages/home/widgets/todo-list/todo-card/todo-card.component';
 import {FlexModule} from '@angular/flex-layout';
 import {HttpClientModule} from '@angular/common/http';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatSelectModule} from '@angular/material/select';
+import {MatInputModule} from '@angular/material/input';
+import {MatDatepickerModule} from '@angular/material/datepicker';
+import {MatDialogModule} from '@angular/material/dialog';
+import {ReactiveFormsModule} from '@angular/forms';
+import {MatGridListModule} from '@angular/material/grid-list';
 
 @NgModule({
   declarations: [
     AppComponent,
     HomeComponent,
-    CreateTodoComponent,
-    EditTodoComponent,
+    CreateTodoDialogComponent,
+    EditTodoDialogComponent,
     TodoListComponent,
     TodoEditorComponent,
     TodoWriterComponent,
@@ -45,7 +52,14 @@ import {HttpClientModule} from '@angular/common/http';
     MatButtonModule,
     MatListModule,
     FlexModule,
-    HttpClientModule
+    HttpClientModule,
+    MatFormFieldModule,
+    MatSelectModule,
+    MatInputModule,
+    MatDatepickerModule,
+    MatDialogModule,
+    ReactiveFormsModule,
+    MatGridListModule
   ],
   providers: [TodoApiService],
   bootstrap: [AppComponent]

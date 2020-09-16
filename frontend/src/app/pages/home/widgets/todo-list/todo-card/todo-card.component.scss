@@ -30,11 +30,11 @@
 }
 
 .edit-button {
-  float: right;
   position: relative;
   top: 0;
   right: 0;
   font-size: 1.5rem;
+  user-select: none;
 }
 
 .edit-button a {
@@ -52,15 +52,17 @@
 }
 
 .card-description {
-  //  color: darken($light-primary-text, 25);
+  color: darken($light-primary-text, 10);
+  font-family: Helvetica, "Helvetica Neue", "Noto Sans", serif;
+  font-size: 1.1em;
 }
 
 .pending {
-  color: gray;
+  color: gray !important;
 }
 
 .error {
-  color: red;
+  color: red !important;
 }
 
 .errorFloater {

@@ -1,12 +1,12 @@
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 import {HomeComponent} from './pages/home/home.component';
-import {EditTodoComponent} from './pages/edit-todo/edit-todo.component';
-import {CreateTodoComponent} from './pages/home/widgets/create-todo-dialog/create-todo.component';
+import {EditTodoDialogComponent} from './pages/home/widgets/edit-todo-dialog/edit-todo-dialog.component';
+import {CreateTodoDialogComponent} from './pages/home/widgets/create-todo-dialog/create-todo-dialog.component';
 
 const routes: Routes = [
-  {path: 'create', component: CreateTodoComponent},
-  {path: 'edit/:id', component: EditTodoComponent},
+  {path: 'create', component: CreateTodoDialogComponent},
+  {path: 'edit/:id', component: EditTodoDialogComponent},
   {path: '', component: HomeComponent},
 ];
 

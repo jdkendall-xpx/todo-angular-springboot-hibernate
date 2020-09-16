@@ -9,9 +9,9 @@
               <app-toggle-checkbox [state]="todo.completed" [class.pending]="todo.dirty" [class.error]="todo.error"
                                    (toggle)="onToggle()"></app-toggle-checkbox>
             </div>
-            <div>{{todo.title}}</div>
+            <div fxFlex="90">{{todo.title}}</div>
             <div class="edit-button">
-              <a routerLink="/edit/{{todo.id}}">
+              <a (click)="onEdit()">
                 <mat-icon [inline]="true">edit</mat-icon>
               </a>
             </div>
@@ -20,12 +20,13 @@
       </div>
     </mat-card-title>
     <mat-card-content>
-      <div>
+      <div class="pb-3">
         <mat-icon [inline]="true" class="calendar-icon pr-1">event</mat-icon>
-        <span class="card-created-at">{{todo.createdAt.toDateString()}}</span></div>
-      <hr/>
+        <span class="card-created-at">{{todo.createdAt.toDateString()}}</span>
+      </div>
       <div>
-        <span class="card-description">{{todo.description}}</span></div>
+        <span class="card-description">{{todo.description}}</span>
+      </div>
     </mat-card-content>
   </mat-card>
 </div>

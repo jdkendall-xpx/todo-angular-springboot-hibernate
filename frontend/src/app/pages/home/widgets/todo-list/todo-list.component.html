@@ -4,6 +4,7 @@
   <ng-container *ngFor="let todo of model.$todos | async">
     <app-todo-card
       [todo]="todo" (toggle)="onToggleTodoCompletedState(todo)"
+      (edit)="onEditCard(todo)"
       class="todo-card"></app-todo-card>
   </ng-container>
 </div>

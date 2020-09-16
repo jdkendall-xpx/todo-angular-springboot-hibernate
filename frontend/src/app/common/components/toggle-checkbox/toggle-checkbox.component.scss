@@ -1,6 +1,12 @@
+@import "~@angular/material/theming";
+
 .checkbox-container {
   vertical-align: middle;
   cursor: pointer;
+}
+
+.checkbox-container :hover {
+  color: $light-secondary-text;
 }
 
 .checkbox-container ::selection {

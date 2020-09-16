@@ -10,6 +10,7 @@ export class TodoCardComponent implements OnInit {
 
   @Input() todo: TodoModelState;
   @Output() toggle = new EventEmitter();
+  @Output() edit = new EventEmitter();
 
   constructor() {
   }
@@ -19,5 +20,9 @@ export class TodoCardComponent implements OnInit {
 
   onToggle(): void {
     this.toggle.emit();
+  }
+
+  onEdit(): void {
+    this.edit.emit();
   }
 }
