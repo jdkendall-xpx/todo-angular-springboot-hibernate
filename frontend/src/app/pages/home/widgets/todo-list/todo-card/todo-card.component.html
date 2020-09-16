@@ -1,33 +1,31 @@
-<mat-card class="todo-card mat-elevation-z8 edit-hover">
-  <mat-card-title>
-    <div fxLayout="row" fxLayoutAlign="start stretch">
-      <div fxFlexFill fxFlexAlign="start" class="card-title">
-        <div fxLayout="row" fxLayoutGap=".4em">
-          <div fxFlexAlign="stretch">
-            <div class="errorFloater" *ngIf="todo.error">Error updating todo</div>
-            <app-toggle-checkbox [state]="todo.completed" [class.pending]="todo.dirty" [class.error]="todo.error"
-                                 (toggle)="onToggle()"></app-toggle-checkbox>
+<div class="edit-hover">
+  <mat-card class="todo-card mat-elevation-z8">
+    <mat-card-title>
+      <div fxLayout="row" fxLayoutAlign="start stretch">
+        <div fxFlexFill fxFlexAlign="start" class="card-title">
+          <div fxLayout="row" fxLayoutGap=".4em">
+            <div fxFlexAlign="stretch">
+              <div class="errorFloater" *ngIf="todo.error">Error updating todo</div>
+              <app-toggle-checkbox [state]="todo.completed" [class.pending]="todo.dirty" [class.error]="todo.error"
+                                   (toggle)="onToggle()"></app-toggle-checkbox>
+            </div>
+            <div>{{todo.title}}</div>
+            <div class="edit-button">
+              <a routerLink="/edit/{{todo.id}}">
+                <mat-icon [inline]="true">edit</mat-icon>
+              </a>
+            </div>
           </div>
-          <div>{{todo.title}}</div>
         </div>
       </div>
-      <div fxFlexAlign="stretch">
-        <div class="edit-button">
-          <a routerLink="/edit/{{todo.id}}">
-            <mat-icon [inline]="true">edit</mat-icon>
-          </a>
-        </div>
-      </div>
-    </div>
-  </mat-card-title>
-  <mat-card-content>
-    <div>
-      <mat-icon [inline]="true" class="pr-1">event</mat-icon>
-      <span>{{todo.createdAt.toDateString()}}</span></div>
-    <hr/>
-    <div>
-      <mat-icon [inline]="true"></mat-icon>
-      <span>{{todo.description}}</span></div>
-  </mat-card-content>
-</mat-card>
-
+    </mat-card-title>
+    <mat-card-content>
+      <div>
+        <mat-icon [inline]="true" class="calendar-icon pr-1">event</mat-icon>
+        <span class="card-created-at">{{todo.createdAt.toDateString()}}</span></div>
+      <hr/>
+      <div>
+        <span class="card-description">{{todo.description}}</span></div>
+    </mat-card-content>
+  </mat-card>
+</div>
