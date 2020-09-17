@@ -3,6 +3,7 @@ import {MatDialog, MatDialogConfig} from '@angular/material/dialog';
 import {CreateTodoDialogComponent} from './widgets/create-todo-dialog/create-todo-dialog.component';
 import {TodoListModel} from './widgets/todo-list/todo-list.model';
 import {TodoApiService} from '../../services/todo-api.service';
+import {TodoEntry} from '../../domain/todoEntry';
 
 @Component({
   selector: 'app-home',
@@ -32,6 +33,14 @@ export class HomeComponent implements OnInit {
       dialogConfig.width = '90vw';
     }
 
-    this.dialog.open(CreateTodoDialogComponent, dialogConfig);
+    this.dialog.open(CreateTodoDialogComponent, dialogConfig)
+      .afterClosed()
+      .subscribe(n => this.onCreateTodoDialogClose(n));
+  }
+
+  private onCreateTodoDialogClose(result: TodoEntry): void {
+    if (result) {
+      this.model.addTodoEntry(result);
+    }
   }
 }

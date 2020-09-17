@@ -2,6 +2,7 @@ import {Component, OnInit, ViewChild} from '@angular/core';
 import {MatDialogRef} from '@angular/material/dialog';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {TodoWriterComponent} from './widgets/todo-writer/todo-writer.component';
+import {TodoEntry} from '../../../../domain/todoEntry';
 
 @Component({
   selector: 'app-create-todo-dialog',
@@ -25,7 +26,14 @@ export class CreateTodoDialogComponent implements OnInit {
 
   save(): void {
     if (this.form.valid) {
-      this.dialogRef.close(this.form.value);
+      const newTodo = {
+        ...this.form.value,
+        id: null,
+        completed: false,
+        createdAt: new Date()
+      } as TodoEntry;
+      console.table(newTodo);
+      this.dialogRef.close(newTodo);
     }
   }
 

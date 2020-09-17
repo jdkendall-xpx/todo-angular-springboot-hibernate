@@ -53,6 +53,21 @@ export class TodoListModel {
       )
       .subscribe();
   }
+
+  addTodoEntry(newEntry: TodoEntry): void {
+    console.table(newEntry);
+    const updated = [{...newEntry, dirty: false, error: false} as TodoModelState, ...this.todosSubject.getValue()];
+    this.todosSubject.next(updated);
+
+    this.todoApi.createTodo(newEntry)
+      .pipe(
+        catchError((err) => {
+          this.updateTodoEntry({...newEntry, dirty: false, error: true});
+          return throwError(err);
+        })
+      )
+      .subscribe();
+  }
 }
 
 function ifIdsMatch(curObj: TodoModelState, newObj: TodoModelState): boolean {
