@@ -32,7 +32,6 @@ export class CreateTodoDialogComponent implements OnInit {
         completed: false,
         createdAt: new Date()
       } as TodoEntry;
-      console.table(newTodo);
       this.dialogRef.close(newTodo);
     }
   }

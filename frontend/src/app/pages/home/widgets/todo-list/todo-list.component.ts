@@ -1,6 +1,8 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {TodoEntry} from '../../../../domain/todoEntry';
 import {TodoListModel, TodoModelState} from './todo-list.model';
+import {MatDialog, MatDialogConfig} from '@angular/material/dialog';
+import {EditTodoDialogComponent} from '../edit-todo-dialog/edit-todo-dialog.component';
 
 @Component({
   selector: 'app-todo-list',
@@ -12,7 +14,7 @@ export class TodoListComponent implements OnInit {
   @Input()
   model: TodoListModel;
 
-  constructor() {
+  constructor(private dialog: MatDialog) {
   }
 
   ngOnInit(): void {
@@ -23,7 +25,26 @@ export class TodoListComponent implements OnInit {
     this.model.toggleTodoCompletedState(todo);
   }
 
-  onEditCard(_: TodoModelState): void {
-    // TODO
+  onEditCard(entry: TodoModelState): void {
+    const dialogConfig = new MatDialogConfig();
+
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = true;
+
+    if (window.innerWidth <= 500) {
+      dialogConfig.width = '90vw';
+    }
+
+    dialogConfig.data = entry;
+
+    this.dialog.open(EditTodoDialogComponent, dialogConfig)
+      .afterClosed()
+      .subscribe(n => this.onEditTodoDialogClose(n));
+  }
+
+  private onEditTodoDialogClose(result: TodoEntry): void {
+    if (result) {
+      this.model.updateTodoEntry(result);
+    }
   }
 }

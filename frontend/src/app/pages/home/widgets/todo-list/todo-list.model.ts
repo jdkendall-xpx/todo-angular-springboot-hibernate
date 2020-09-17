@@ -24,9 +24,30 @@ export class TodoListModel {
       ).subscribe();
   }
 
-  updateTodoEntry(entry: TodoModelState): void {
-    const updated = replaceFirst(this.todosSubject.getValue(), entry, ifIdsMatch);
+  updateTodoEntry(entry: TodoEntry): void {
+    this.updateInternalTodoEntry({...entry, dirty: false, error: false});
+    this.todoApi.updateTodo(entry)
+      .pipe(
+        catchError((err) => {
+          this.updateInternalTodoEntry({...entry, dirty: false, error: true});
+          return throwError(err);
+        })
+      )
+      .subscribe();
+  }
+
+  addTodoEntry(newEntry: TodoEntry): void {
+    const updated = [{...newEntry, dirty: false, error: false} as TodoModelState, ...this.todosSubject.getValue()];
     this.todosSubject.next(updated);
+
+    this.todoApi.createTodo(newEntry)
+      .pipe(
+        catchError((err) => {
+          this.updateInternalTodoEntry({...newEntry, dirty: false, error: true});
+          return throwError(err);
+        })
+      )
+      .subscribe();
   }
 
   toggleTodoCompletedState(todo: TodoModelState): void {
@@ -36,37 +57,27 @@ export class TodoListModel {
     }
 
     const updated: TodoModelState = {...todo, completed: !todo.completed, dirty: true, error: false};
-    this.updateTodoEntry(updated);
+    this.updateInternalTodoEntry(updated);
 
     this.todoApi.updateTodo(updated as TodoEntry)
       .pipe(
         // For good values, map response to the model & update our current entry with fresh state
         map(n => n as TodoModelState),
         tap((value) => {
-          this.updateTodoEntry({...value, dirty: false, error: false});
+          this.updateInternalTodoEntry({...value, dirty: false, error: false});
         }),
         // For error values, rewind to old to-do entry value and set error state
         catchError((err) => {
-          this.updateTodoEntry({...todo, dirty: false, error: true});
+          this.updateInternalTodoEntry({...todo, dirty: false, error: true});
           return throwError(err);
         })
       )
       .subscribe();
   }
 
-  addTodoEntry(newEntry: TodoEntry): void {
-    console.table(newEntry);
-    const updated = [{...newEntry, dirty: false, error: false} as TodoModelState, ...this.todosSubject.getValue()];
+  private updateInternalTodoEntry(entry: TodoModelState): void {
+    const updated = replaceFirst(this.todosSubject.getValue(), entry, ifIdsMatch);
     this.todosSubject.next(updated);
-
-    this.todoApi.createTodo(newEntry)
-      .pipe(
-        catchError((err) => {
-          this.updateTodoEntry({...newEntry, dirty: false, error: true});
-          return throwError(err);
-        })
-      )
-      .subscribe();
   }
 }
 

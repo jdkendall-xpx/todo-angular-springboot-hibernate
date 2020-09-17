@@ -1,4 +1,5 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
+import {FormGroup} from '@angular/forms';
 
 @Component({
   selector: 'app-todo-editor',
@@ -6,6 +7,9 @@ import {Component, OnInit} from '@angular/core';
   styleUrls: ['./todo-editor.component.scss']
 })
 export class TodoEditorComponent implements OnInit {
+
+  @Input()
+  formGroup: FormGroup;
 
   constructor() {
   }
