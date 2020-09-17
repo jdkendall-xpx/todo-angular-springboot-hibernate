@@ -28,6 +28,10 @@ export class HomeComponent implements OnInit {
     dialogConfig.disableClose = true;
     dialogConfig.autoFocus = true;
 
+    if (window.innerWidth <= 500) {
+      dialogConfig.width = '90vw';
+    }
+
     this.dialog.open(CreateTodoDialogComponent, dialogConfig);
   }
 }

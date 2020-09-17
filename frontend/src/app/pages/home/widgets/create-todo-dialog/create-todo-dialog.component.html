@@ -1,14 +1,16 @@
 <h2 mat-dialog-title>Create New To-Do</h2>
 
 <mat-dialog-content [formGroup]="form">
-  <app-todo-writer></app-todo-writer>
+  <app-todo-writer [formGroup]="form"></app-todo-writer>
 </mat-dialog-content>
 
 <mat-dialog-actions>
   <div class="dialog-actions">
     <div fxLayout="row" fxLayoutAlign="space-between">
-      <button class="dialog-actions-btn" mat-raised-button (click)="close()">Close</button>
-      <button class="dialog-actions-btn" mat-raised-button color="primary" (click)="save()">Save</button>
+      <button class="dialog-actions-btn" mat-raised-button (click)="close()">Cancel</button>
+      <button class="dialog-actions-btn" mat-raised-button color="primary" [disabled]="form.invalid" (click)="save()">
+        Save
+      </button>
     </div>
   </div>
 </mat-dialog-actions>

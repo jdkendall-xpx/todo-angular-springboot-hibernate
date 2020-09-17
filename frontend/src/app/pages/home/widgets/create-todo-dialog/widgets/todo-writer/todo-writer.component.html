@@ -1,8 +1,10 @@
-<div class="dialog-box" fxLayout="column" fxLayoutGap="start stretch">
+<div class="dialog-box" fxLayout="column" fxLayoutGap="start stretch" [formGroup]="formGroup">
   <div>
     <mat-form-field color="accent" appearance="outline" style="width: 100%;">
       <mat-label>Title</mat-label>
-      <input matInput placeholder="Title" formControlName="title" required aria-label="Title text field">
+      <input matInput class="title-input" placeholder="Title" formControlName="title" aria-label="Title text field"
+             required>
+      <mat-error *ngIf="formGroup?.controls['description'].invalid">Please enter a title.</mat-error>
     </mat-form-field>
   </div>
 
@@ -10,7 +12,8 @@
     <mat-form-field color="accent" appearance="outline" style="width: 100%;">
       <mat-label>Description</mat-label>
       <textarea class="desc-textarea" matInput placeholder="Description"
-                formControlName="description" required aria-label="Description text field"></textarea>
+                formControlName="description" aria-label="Description text field" required></textarea>
+      <mat-error *ngIf="formGroup?.controls['description'].invalid">Please enter a description.</mat-error>
     </mat-form-field>
   </div>
 </div>
