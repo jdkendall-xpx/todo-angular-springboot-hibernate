@@ -18,18 +18,20 @@ public class TodoController {
     TodoRepository todoRepository;
 
     @GetMapping("/todos")
-    public List<TodoEntry> getAllTodos() {
+    public ResponseEntity<List<TodoEntry>> getAllTodos() {
         // Decide how we want to sort our database results -- here we want to go by createdAt column in descending order
         Sort sortByCreatedAt = Sort.by(Sort.Direction.DESC, "createdAt");
 
         // Return all found results
-        return todoRepository.findAll(sortByCreatedAt);
+        List<TodoEntry> results = todoRepository.findAll(sortByCreatedAt);
+        return ResponseEntity.ok().body(results);
     }
 
     @PostMapping("/todos")
-    public TodoEntry createTodo(@RequestBody TodoEntry todo) {
+    public ResponseEntity<TodoEntry> createTodo(@RequestBody TodoEntry todo) {
         // Save our entry to the database and return the saved entry
-        return todoRepository.save(todo);
+        TodoEntry savedEntry = todoRepository.save(todo);
+        return ResponseEntity.ok().body(savedEntry);
     }
 
     @GetMapping(value = "/todos/{id}")
