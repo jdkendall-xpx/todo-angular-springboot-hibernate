@@ -4,6 +4,7 @@ import {CreateTodoDialogComponent} from './widgets/create-todo-dialog/create-tod
 import {TodoListModel} from './widgets/todo-list/todo-list.model';
 import {TodoApiService} from '../../services/todo-api.service';
 import {TodoEntry} from '../../domain/todoEntry';
+import {MatSnackBar} from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-home',
@@ -14,8 +15,8 @@ export class HomeComponent implements OnInit {
 
   model: TodoListModel;
 
-  constructor(private dialog: MatDialog, private todoApiService: TodoApiService) {
-    this.model = new TodoListModel(this.todoApiService);
+  constructor(private dialog: MatDialog, private todoApiService: TodoApiService, private snackBar: MatSnackBar) {
+    this.model = new TodoListModel(this.todoApiService, this.snackBar);
   }
 
   ngOnInit(): void {

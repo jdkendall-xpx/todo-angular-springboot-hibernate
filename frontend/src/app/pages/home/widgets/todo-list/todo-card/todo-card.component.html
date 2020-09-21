@@ -1,12 +1,14 @@
 <div class="edit-hover">
-  <mat-card class="todo-card mat-elevation-z8">
+  <mat-card class="todo-card mat-elevation-z8" [class.post-dirty]="todo.newPostDirty || todo.postDirty"
+            [class.post-error]="todo.newPostError || todo.postError">
     <mat-card-title>
       <div fxLayout="row" fxLayoutAlign="start stretch">
         <div fxFlexFill fxFlexAlign="start" class="card-title">
           <div fxLayout="row" fxLayoutGap=".4em">
             <div fxFlexAlign="stretch">
-              <div class="errorFloater" *ngIf="todo.error">Error updating todo</div>
-              <app-toggle-checkbox [state]="todo.completed" [class.pending]="todo.dirty" [class.error]="todo.error"
+              <div class="errorFloater" *ngIf="todo.checkboxError">Error updating todo</div>
+              <app-toggle-checkbox [state]="todo.completed" [class.pending]="todo.checkboxDirty"
+                                   [class.error]="todo.checkboxError"
                                    (toggle)="onToggle()"></app-toggle-checkbox>
             </div>
             <div fxFlex="90">{{todo.title}}</div>

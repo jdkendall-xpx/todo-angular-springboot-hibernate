@@ -19,7 +19,16 @@
   }
 }
 
-.desc-textarea {
-  min-height: 300px;
-  resize: none;
+@media screen and (max-height: 400px) {
+  .desc-textarea {
+    min-height: 50%;
+    resize: none;
+  }
+}
+
+@media screen and (min-height: 400px) {
+  .desc-textarea {
+    min-height: 300px;
+    resize: none;
+  }
 }

@@ -85,3 +85,11 @@
 .card-created-at {
   color: darken($light-primary-text, 25);
 }
+
+.post-dirty {
+  opacity: 0.5 !important;
+}
+
+.post-error {
+  background-color: #620017 !important;
+}

@@ -3,33 +3,49 @@ import {TodoEntry} from '../../../../domain/todoEntry';
 import {TodoApiService} from '../../../../services/todo-api.service';
 import {catchError, map, tap} from 'rxjs/operators';
 import {replaceFirst} from '../../../../common/util/utilities';
+import {MatSnackBar} from '@angular/material/snack-bar';
 
 export interface TodoModelState extends TodoEntry {
-  dirty?: boolean;
-  error?: boolean;
+  checkboxDirty?: boolean;
+  checkboxError?: boolean;
+  postDirty?: boolean;
+  postError?: boolean;
+  newPostDirty?: boolean;
+  newPostError?: boolean;
 }
 
 export class TodoListModel {
   private readonly todosSubject: BehaviorSubject<TodoModelState[]> = new BehaviorSubject<TodoModelState[]>([]);
   public readonly $todos: Observable<TodoModelState[]> = this.todosSubject.asObservable();
 
-  constructor(private todoApi: TodoApiService) {
+  constructor(private todoApi: TodoApiService, private snackBar: MatSnackBar) {
   }
 
   updateTodoList(): void {
     this.todoApi.getTodoList()
       .pipe(
-        map((result) => result.map(n => ({...n, dirty: false}))),
+        map((result) => result.map(n => n as TodoModelState)),
         tap((result) => this.todosSubject.next(result))
       ).subscribe();
   }
 
   updateTodoEntry(entry: TodoEntry): void {
-    this.updateInternalTodoEntry({...entry, dirty: false, error: false});
+    this.updateInternalTodoEntry({...entry, postDirty: true});
     this.todoApi.updateTodo(entry)
       .pipe(
+        tap((e) => {
+          this.updateInternalTodoEntry(e);
+          this.snackBar.open(`Successfully updated to-do entry ${e.id}`, 'OK', {
+            duration: 5000,
+            panelClass: 'app-snackbar-success'
+          });
+        }),
         catchError((err) => {
-          this.updateInternalTodoEntry({...entry, dirty: false, error: true});
+          this.updateInternalTodoEntry({...entry, postError: true});
+          this.snackBar.open(`Error updating to-do entry ${entry.id}`, 'OK', {
+            duration: 10000,
+            panelClass: 'app-snackbar-error'
+          });
           return throwError(err);
         })
       )
@@ -37,13 +53,24 @@ export class TodoListModel {
   }
 
   addTodoEntry(newEntry: TodoEntry): void {
-    const updated = [{...newEntry, dirty: false, error: false} as TodoModelState, ...this.todosSubject.getValue()];
+    const updated = [{...newEntry, newPostDirty: true} as TodoModelState, ...this.todosSubject.getValue()];
     this.todosSubject.next(updated);
 
     this.todoApi.createTodo(newEntry)
       .pipe(
+        tap((e) => {
+          this.updateInternalTodoEntry(e);
+          this.snackBar.open(`Successfully created to-do entry ${e.id}`, 'OK', {
+            duration: 5000,
+            panelClass: 'app-snackbar-success'
+          });
+        }),
         catchError((err) => {
-          this.updateInternalTodoEntry({...newEntry, dirty: false, error: true});
+          this.updateInternalTodoEntry({...newEntry, newPostError: true});
+          this.snackBar.open(`Error creating new to-do entry`, 'OK', {
+            duration: 10000,
+            panelClass: 'app-snackbar-error'
+          });
           return throwError(err);
         })
       )
@@ -52,11 +79,11 @@ export class TodoListModel {
 
   toggleTodoCompletedState(todo: TodoModelState): void {
     // Ignore attempts to change a dirty/pending component
-    if (todo.dirty) {
+    if (todo.checkboxDirty) {
       return;
     }
 
-    const updated: TodoModelState = {...todo, completed: !todo.completed, dirty: true, error: false};
+    const updated: TodoModelState = {...todo, completed: !todo.completed, checkboxDirty: true};
     this.updateInternalTodoEntry(updated);
 
     this.todoApi.updateTodo(updated as TodoEntry)
@@ -64,11 +91,19 @@ export class TodoListModel {
         // For good values, map response to the model & update our current entry with fresh state
         map(n => n as TodoModelState),
         tap((value) => {
-          this.updateInternalTodoEntry({...value, dirty: false, error: false});
+          this.snackBar.open(`Successfully updated to-do entry ${value.id}`, 'OK', {
+            duration: 5000,
+            panelClass: 'app-snackbar-success'
+          });
+          this.updateInternalTodoEntry(value);
         }),
         // For error values, rewind to old to-do entry value and set error state
         catchError((err) => {
-          this.updateInternalTodoEntry({...todo, dirty: false, error: true});
+          this.updateInternalTodoEntry({...todo, checkboxError: true});
+          this.snackBar.open(`Error toggling completion on to-do entry ${todo.id}`, 'OK', {
+            duration: 10000,
+            panelClass: 'app-snackbar-error'
+          });
           return throwError(err);
         })
       )
@@ -76,7 +111,16 @@ export class TodoListModel {
   }
 
   private updateInternalTodoEntry(entry: TodoModelState): void {
-    const updated = replaceFirst(this.todosSubject.getValue(), entry, ifIdsMatch);
+    const toUpdate = {
+      checkboxDirty: false,
+      checkboxError: false,
+      postDirty: false,
+      postError: false,
+      newPostDirty: false,
+      newPostError: false,
+      ...entry
+    };
+    const updated = replaceFirst(this.todosSubject.getValue(), toUpdate, ifIdsMatch);
     this.todosSubject.next(updated);
   }
 }
