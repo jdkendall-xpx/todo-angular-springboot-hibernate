@@ -21,7 +21,7 @@ export class HomeComponent implements OnInit {
 
   ngOnInit(): void {
     // Load the to-do list for the first time
-    this.model.updateTodoList();
+    this.model.retrieveTodoList();
   }
 
   openNewTodoDialog(): void {

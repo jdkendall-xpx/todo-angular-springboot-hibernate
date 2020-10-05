@@ -51,4 +51,12 @@ export class TodoListComponent implements OnInit {
   onDeleteCard(entry: TodoModelState): void {
     this.model.deleteTodoEntry(entry);
   }
+
+  onRetry(entry: TodoModelState): void {
+    this.model.retryChange(entry);
+  }
+
+  onCancel(entry: TodoModelState): void {
+    this.model.cancelChange(entry);
+  }
 }

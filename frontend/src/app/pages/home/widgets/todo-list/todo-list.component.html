@@ -6,6 +6,8 @@
       [todo]="todo" (toggle)="onToggleTodoCompletedState(todo)"
       (edit)="onEditCard(todo)"
       (delete)="onDeleteCard(todo)"
+      (retry)="onRetry(todo)"
+      (cancel)="onCancel(todo)"
       class="todo-card"></app-todo-card>
   </ng-container>
 </div>

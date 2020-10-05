@@ -21,29 +21,33 @@
   }
 }
 
-.edit-hover .edit-button {
+.edit-hover .card-buttons {
   visibility: hidden;
 }
 
-.edit-hover :hover .edit-button {
+.edit-hover :hover .card-buttons {
   visibility: visible;
 }
 
-.edit-button {
+.card-buttons {
   position: relative;
   top: 0;
-  right: 0;
+  right: -0.5em;
   font-size: 1.5rem;
   user-select: none;
 }
 
-.edit-button a {
+.card-buttons a {
   cursor: pointer;
   color: inherit;
 }
 
-.edit-button :hover {
+.card-buttons-normal :hover {
   color: hsl(270, 50%, 70%);
+}
+
+.card-buttons-error :hover {
+  color: hsl(151, 80%, 70%);
 }
 
 .card-title {
@@ -66,6 +70,7 @@
 }
 
 .errorFloater {
+  display: none;
   position: absolute;
   left: -10em;
   font-size: 0.6em;
@@ -74,6 +79,10 @@
   font-weight: bold;
   padding-right: 1em;
   padding-left: 1em;
+}
+
+.edit-hover :hover .errorFloater {
+  display: block;
 }
 
 .calendar-icon {

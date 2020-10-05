@@ -1,6 +1,6 @@
 <div class="edit-hover">
   <mat-card class="todo-card mat-elevation-z8" [class.post-dirty]="todo.newPostDirty || todo.postDirty"
-            [class.post-error]="todo.newPostError || todo.postError">
+            [class.post-error]="todo.newPostError || todo.postError || todo.checkboxError">
     <mat-card-title>
       <div fxLayout="row" fxLayoutAlign="start stretch">
         <div fxFlexFill fxFlexAlign="start" class="card-title">
@@ -11,14 +11,29 @@
                                    [class.error]="todo.checkboxError"
                                    (toggle)="onToggle()"></app-toggle-checkbox>
             </div>
-            <div fxFlex="90">{{todo.title}}</div>
-            <div class="edit-button">
-              <a (click)="onEdit()">
-                <mat-icon [inline]="true">edit</mat-icon>
-              </a>
-              <a (click)="onDelete()">
-                <mat-icon [inline]="true">delete</mat-icon>
-              </a>
+            <div fxFlex="95">{{todo.title}}</div>
+            <div
+              class="card-buttons"
+              [class.card-buttons-normal]="!(todo.newPostError || todo.postError || todo.checkboxError)"
+              [class.card-buttons-error]="todo.newPostError || todo.postError || todo.checkboxError"
+              *ngIf="!(todo.checkboxDirty || todo.postDirty || todo.newPostDirty)">
+              <div *ngIf="todo.postError || todo.newPostError || todo.checkboxError; then error ; else edit"></div>
+              <ng-template #edit>
+                <a (click)="onEdit()">
+                  <mat-icon [inline]="true">edit</mat-icon>
+                </a>
+                <a (click)="onDelete()">
+                  <mat-icon [inline]="true">delete</mat-icon>
+                </a>
+              </ng-template>
+              <ng-template #error>
+                <a (click)="onFailRetry()">
+                  <mat-icon [inline]="true">refresh</mat-icon>
+                </a>
+                <a (click)="onFailDiscard()">
+                  <mat-icon [inline]="true">cancel</mat-icon>
+                </a>
+              </ng-template>
             </div>
           </div>
         </div>

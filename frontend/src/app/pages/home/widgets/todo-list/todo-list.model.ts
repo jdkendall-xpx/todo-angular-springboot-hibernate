@@ -15,16 +15,23 @@ export interface TodoModelState extends TodoEntry {
   newPostError?: boolean;
 }
 
+interface Failure {
+  id: number;
+  retry: () => void;
+  cancel: () => void;
+}
+
 type TodoModelStateComparator = (obj: TodoModelState, newObj: TodoModelState) => boolean;
 
 export class TodoListModel {
   private readonly todosSubject: BehaviorSubject<TodoModelState[]> = new BehaviorSubject<TodoModelState[]>([]);
   public readonly $todos: Observable<TodoModelState[]> = this.todosSubject.asObservable();
+  private failures: Failure[] = [];
 
   constructor(private todoApi: TodoApiService, private snackBar: MatSnackBar) {
   }
 
-  updateTodoList(): void {
+  retrieveTodoList(): void {
     this.todoApi.getTodoList()
       .pipe(
         map((result) => result.map(n => n as TodoModelState)),
@@ -33,6 +40,7 @@ export class TodoListModel {
   }
 
   updateTodoEntry(entry: TodoEntry): void {
+    const oldValue = this.todosSubject.getValue().find(e => e.id === entry.id);
     this.updateInternalTodoEntry({...entry, postDirty: true});
     this.todoApi.updateTodo(entry)
       .pipe(
@@ -44,6 +52,14 @@ export class TodoListModel {
           });
         }),
         catchError((err) => {
+          this.failures.push({
+            id: entry.id,
+            retry: () => {
+              this.updateInternalTodoEntry(oldValue);
+              this.updateTodoEntry(entry);
+            },
+            cancel: () => this.updateInternalTodoEntry(oldValue)
+          });
           this.updateInternalTodoEntry({...entry, postError: true});
           this.snackBar.open(`Error updating to-do entry ${entry.id}`, 'OK', {
             duration: 10000,
@@ -57,7 +73,8 @@ export class TodoListModel {
 
   addTodoEntry(newEntry: TodoEntry): void {
     const tempId = uuid();
-    const updated = [{...newEntry, newPostDirty: true, id: tempId} as TodoModelState, ...this.todosSubject.getValue()];
+    const newEntryWithId = {...newEntry, id: tempId};
+    const updated = [{...newEntryWithId, newPostDirty: true} as TodoModelState, ...this.todosSubject.getValue()];
     this.todosSubject.next(updated);
 
     this.todoApi.createTodo(newEntry)
@@ -70,7 +87,15 @@ export class TodoListModel {
           });
         }),
         catchError((err) => {
-          this.updateInternalTodoEntry({...newEntry, newPostError: true});
+          this.failures.push({
+            id: tempId,
+            retry: () => {
+              this.deleteInternalTodoEntry(newEntryWithId);
+              this.addTodoEntry(newEntry);
+            },
+            cancel: () => this.deleteInternalTodoEntry(newEntryWithId)
+          });
+          this.updateInternalTodoEntry({...newEntryWithId, newPostError: true});
           this.snackBar.open(`Error creating new to-do entry`, 'OK', {
             duration: 10000,
             panelClass: 'app-snackbar-error'
@@ -87,6 +112,7 @@ export class TodoListModel {
       return;
     }
 
+    const oldValue = this.todosSubject.getValue().find(n => n.id === todo.id);
     const updated: TodoModelState = {...todo, completed: !todo.completed, checkboxDirty: true};
     this.updateInternalTodoEntry(updated);
 
@@ -103,6 +129,14 @@ export class TodoListModel {
         }),
         // For error values, rewind to old to-do entry value and set error state
         catchError((err) => {
+          this.failures.push({
+            id: todo.id,
+            retry: () => {
+              this.updateInternalTodoEntry(oldValue);
+              this.toggleTodoCompletedState(todo);
+            },
+            cancel: () => this.updateInternalTodoEntry(oldValue)
+          });
           this.updateInternalTodoEntry({...todo, checkboxError: true});
           this.snackBar.open(`Error toggling completion on to-do entry ${todo.id}`, 'OK', {
             duration: 10000,
@@ -126,6 +160,14 @@ export class TodoListModel {
           });
         }),
         catchError((err) => {
+          this.failures.push({
+            id: entry.id,
+            retry: () => {
+              this.updateInternalTodoEntry(entry);
+              this.deleteTodoEntry(entry);
+            },
+            cancel: () => this.updateInternalTodoEntry(entry)
+          });
           this.updateInternalTodoEntry({...entry, postError: true});
           this.snackBar.open(`Error deleting to-do entry ${entry.id}`, 'OK', {
             duration: 10000,
@@ -134,6 +176,18 @@ export class TodoListModel {
           return throwError(err);
         })
       ).subscribe();
+  }
+
+  retryChange(entry: TodoModelState): void {
+    const failure = this.failures.find(e => e.id === entry.id);
+    this.failures = this.failures.filter(n => n !== failure);
+    failure?.retry();
+  }
+
+  cancelChange(entry: TodoModelState): void {
+    const failure = this.failures.find(e => e.id === entry.id);
+    this.failures = this.failures.filter(n => n !== failure);
+    failure?.cancel();
   }
 
   private updateInternalTodoEntry(entry: TodoModelState, predicate: TodoModelStateComparator = ifIdsMatch): void {
@@ -156,6 +210,6 @@ export class TodoListModel {
   }
 }
 
-function ifIdsMatch(curObj: TodoModelState, newObj: TodoModelState): boolean {
-  return curObj.id === newObj.id;
+function ifIdsMatch(a: TodoModelState, b: TodoModelState): boolean {
+  return a.id === b.id;
 }

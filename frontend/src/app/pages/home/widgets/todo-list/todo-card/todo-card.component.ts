@@ -12,6 +12,8 @@ export class TodoCardComponent implements OnInit {
   @Output() toggle = new EventEmitter();
   @Output() edit = new EventEmitter();
   @Output() delete = new EventEmitter();
+  @Output() retry = new EventEmitter();
+  @Output() cancel = new EventEmitter();
 
   constructor() {
   }
@@ -29,5 +31,13 @@ export class TodoCardComponent implements OnInit {
 
   onDelete(): void {
     this.delete.emit();
+  }
+
+  onFailRetry(): void {
+    this.retry.emit();
+  }
+
+  onFailDiscard(): void {
+    this.cancel.emit();
   }
 }
