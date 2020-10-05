@@ -5,6 +5,7 @@
     <app-todo-card
       [todo]="todo" (toggle)="onToggleTodoCompletedState(todo)"
       (edit)="onEditCard(todo)"
+      (delete)="onDeleteCard(todo)"
       class="todo-card"></app-todo-card>
   </ng-container>
 </div>

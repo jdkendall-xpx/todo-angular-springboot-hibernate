@@ -1,6 +1,6 @@
 // Replace first item in an array
 export function replaceFirst<T>(current: T[], newObj: T, compare: (e: T, n: T) => boolean): T[] {
-  const indexToUpdate = current.findIndex(obj => compare(newObj, obj));
+  const indexToUpdate = current.findIndex(obj => compare(obj, newObj));
   const updated = [...current];
   updated[indexToUpdate] = newObj;
   return updated;

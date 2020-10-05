@@ -47,4 +47,8 @@ export class TodoListComponent implements OnInit {
       this.model.updateTodoEntry(result);
     }
   }
+
+  onDeleteCard(entry: TodoModelState): void {
+    this.model.deleteTodoEntry(entry);
+  }
 }
