@@ -1,6 +1,6 @@
 # Backend Server (API)
 ## Running the server
-From inside the `backend/` folder, run `mvn spring-boot:run` -- this will start Tomcat and serve the API at `localhost:8080`. 
+From inside the `backend/` folder, run `mvn spring-boot:run` -- this will start Tomcat and serve the API at `localhost:8081`. 
 You can then use `curl` or Postman to make requests to the API while this is running like so:
 
 #### Curl
