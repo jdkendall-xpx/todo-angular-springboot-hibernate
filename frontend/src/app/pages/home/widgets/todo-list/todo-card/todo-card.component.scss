@@ -1,38 +1,27 @@
 @import '~@angular/material/theming';
 
 .todo-card {
-  min-height: 275px;
-  min-width: 300px;
-  max-width: 350px;
+  min-height: 300px;
+  min-width: 400px;
+  max-width: 400px;
   margin: 4px 4px;
   color: $light-primary-text;
 }
 
-@media screen and (max-width: 400px) {
-  .todo-card {
-    min-width: 300px;
-    max-width: 300px;
-  }
-}
-
-@media screen and (min-width: 400px) and (max-width: 959px) {
-  .todo-card {
-    min-width: 350px;
-  }
-}
-
 .edit-hover .card-buttons {
+  display: none;
   visibility: hidden;
 }
 
 .edit-hover :hover .card-buttons {
+  display: block;
   visibility: visible;
 }
 
 .card-buttons {
   position: relative;
   top: 0;
-  right: -0.5em;
+  right: 0;
   font-size: 1.5rem;
   user-select: none;
 }
@@ -40,6 +29,7 @@
 .card-buttons a {
   cursor: pointer;
   color: inherit;
+  display: block;
 }
 
 .card-buttons-normal :hover {
@@ -101,4 +91,45 @@
 
 .post-error {
   background-color: #620017 !important;
+}
+
+.todo-metadata-fields {
+  margin-top: 2px;
+  margin-bottom: 8px;
+  padding: 2px 2px 8px;
+  border: 1px solid hsl(270, 0%, 52%);
+  border-radius: 6px;
+}
+
+.todo-metadata-field {
+  margin: 5px 0;
+}
+
+.todo-title {
+  min-height: 4.5rem;
+}
+
+@media screen and (max-width: 400px) {
+  .todo-card {
+    min-width: 320px;
+    max-width: 320px;
+  }
+
+  .todo-metadata-fields {
+    margin: 2px -6px 8px;
+    padding: 1px 1px 8px;
+    border: none;
+  }
+
+  .todo-metadata-field {
+    margin: 1px 0;
+    text-align: left;
+    justify-content: flex-start;
+  }
+}
+
+@media screen and (min-width: 400px) and (max-width: 959px) {
+  .todo-card {
+    min-width: 350px;
+  }
 }

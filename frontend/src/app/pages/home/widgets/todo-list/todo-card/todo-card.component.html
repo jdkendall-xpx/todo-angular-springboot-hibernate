@@ -2,7 +2,7 @@
   <mat-card class="todo-card mat-elevation-z8" [class.post-dirty]="todo.newPostDirty || todo.postDirty"
             [class.post-error]="todo.newPostError || todo.postError || todo.checkboxError">
     <mat-card-title>
-      <div fxLayout="row" fxLayoutAlign="start stretch">
+      <div fxLayout="row" fxLayoutAlign="start stretch" class="todo-title">
         <div fxFlexFill fxFlexAlign="start" class="card-title">
           <div fxLayout="row" fxLayoutGap=".4em">
             <div fxFlexAlign="stretch">
@@ -40,9 +40,25 @@
       </div>
     </mat-card-title>
     <mat-card-content>
-      <div class="pb-3">
-        <mat-icon [inline]="true" class="calendar-icon pr-1">event</mat-icon>
-        <span class="card-created-at">{{todo.createdAt.toDateString()}}</span>
+      <div class="todo-metadata-fields">
+        <mat-grid-list cols="2" rowHeight="2em">
+          <mat-grid-tile title="Created At" class="todo-metadata-field">
+            <mat-icon [inline]="true" class="calendar-icon pr-1">today</mat-icon>
+            <span class="card-created-at">{{todo.createdAt.toDateString()}}</span>
+          </mat-grid-tile>
+          <mat-grid-tile *ngIf="todo.lastModifiedAt" title="Last Modified At" class="todo-metadata-field">
+            <mat-icon [inline]="true" class="calendar-icon pr-1">update</mat-icon>
+            <span class="card-last-modified-at">{{todo.lastModifiedAt?.toDateString()}}</span>
+          </mat-grid-tile>
+          <mat-grid-tile *ngIf="todo.completedOn" title="Completed On" class="todo-metadata-field">
+            <mat-icon [inline]="true" class="calendar-icon pr-1">event_available</mat-icon>
+            <span class="card-completed-at">{{todo.completedOn?.toDateString()}}</span>
+          </mat-grid-tile>
+          <mat-grid-tile *ngIf="todo.dueOn" title="Due On" class="todo-metadata-field">
+            <mat-icon [inline]="true" class="calendar-icon pr-1">notifications_active</mat-icon>
+            <span class="card-due-on">{{todo.dueOn?.toDateString()}}</span>
+          </mat-grid-tile>
+        </mat-grid-list>
       </div>
       <div>
         <span class="card-description">{{todo.description}}</span>

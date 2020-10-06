@@ -46,12 +46,21 @@ interface ApiTodoEntry {
   description: string;
   createdAt: string;
   completed: boolean;
+  lastModifiedAt?: Date;
+  completedOn?: Date;
+  dueOn?: Date;
 }
 
 const MAPPINGS = {
   TODO_ENTRY: {
     toDomain: (e: ApiTodoEntry): TodoEntry => {
-      return {...e, createdAt: new Date(e.createdAt)};
+      return {
+        ...e,
+        createdAt: new Date(e.createdAt),
+        lastModifiedAt: e.lastModifiedAt ? new Date(e.lastModifiedAt) : undefined,
+        completedOn: e.completedOn ? new Date(e.completedOn) : undefined,
+        dueOn: e.dueOn ? new Date(e.dueOn) : undefined,
+      };
     },
     toApi: (e: TodoEntry): ApiTodoEntry => {
       return {...e, createdAt: e.createdAt.toISOString()};
