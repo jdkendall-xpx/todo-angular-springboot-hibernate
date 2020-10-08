@@ -17,6 +17,9 @@ public class TodoController {
     @Autowired
     TodoRepository todoRepository;
 
+    @Autowired
+    TodoEntryService todoEntryService;
+
     @GetMapping("/todos")
     public ResponseEntity<List<TodoEntry>> getAllTodos() {
         // Decide how we want to sort our database results -- here we want to go by createdAt column in descending order
@@ -61,35 +64,20 @@ public class TodoController {
     }
 
     @PutMapping(value = "/todos/{id}")
-    public ResponseEntity<TodoEntry> updateTodo(@PathVariable("id") String idString, @RequestBody TodoEntry todo) {
+    public ResponseEntity<TodoEntry> updateTodo(@PathVariable("id") String idString, @RequestBody TodoEntry todoChanges) {
         try {
             // Turn our string into an ID number
             long id = Long.parseLong(idString);
 
-            // Get our to-do entry from the database
-            Optional<TodoEntry> originalEntry = todoRepository.findById(id);
+            TodoEntry result = this.todoEntryService.updateTodo(id, todoChanges);
 
-            // Check if we found an entry
-            if (originalEntry.isPresent()) {
-                // Use the entry's data
-                TodoEntry entryData = originalEntry.get();
-
-                // Update the entry
-                entryData.setTitle(todo.getTitle());
-                entryData.setCompleted(todo.getCompleted());
-
-                // Save the updated version to the database
-                TodoEntry updatedTodo = todoRepository.save(entryData);
-
-                // Return the updated full entry inside a 200 OK response
-                return ResponseEntity.ok().body(updatedTodo);
-            } else {
-                // Return a 404 Not Found status, since we didn't find the entry
-                return ResponseEntity.notFound().build();
-            }
+            return ResponseEntity.ok().body();
         } catch (NumberFormatException ex) {
             // Return a 400 Bad Request response, we did not pass a number as an ID
             return ResponseEntity.badRequest().build();
+        } catch(InvalidIdException ex) {
+            //return a 404 not Found response, we did not find a valid entry for the ID
+            return ResponseEntity.notFound().build();
         }
     }
 

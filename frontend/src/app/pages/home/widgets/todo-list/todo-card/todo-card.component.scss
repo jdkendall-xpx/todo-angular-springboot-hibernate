@@ -85,6 +85,18 @@
   color: darken($light-primary-text, 25);
 }
 
+.card-completed-at {
+  color: darken($light-primary-text, 25);
+}
+
+.card-due-on {
+  color: darken($light-primary-text, 25);
+}
+
+.card-last-modified-at {
+  color: darken($light-primary-text, 25);
+}
+
 .post-dirty {
   opacity: 0.5 !important;
 }
@@ -94,15 +106,10 @@
 }
 
 .todo-metadata-fields {
-  margin-top: 2px;
-  margin-bottom: 8px;
-  padding: 2px 2px 8px;
+  margin: 2px auto 16px;
+  padding: 8px 4px 2px;
   border: 1px solid hsl(270, 0%, 52%);
   border-radius: 6px;
-}
-
-.todo-metadata-field {
-  margin: 5px 0;
 }
 
 .todo-title {
@@ -120,16 +127,11 @@
     padding: 1px 1px 8px;
     border: none;
   }
-
-  .todo-metadata-field {
-    margin: 1px 0;
-    text-align: left;
-    justify-content: flex-start;
-  }
 }
 
 @media screen and (min-width: 400px) and (max-width: 959px) {
   .todo-card {
-    min-width: 350px;
+    min-width: 380px;
+    max-width: 380px;
   }
 }
