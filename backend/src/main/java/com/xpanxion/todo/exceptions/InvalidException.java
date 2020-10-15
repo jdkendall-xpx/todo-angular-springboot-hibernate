@@ -1,4 +1,4 @@
 package main.java.com.xpanxion.todo.exceptions;
 
-public class InvalidException {
+public class InvalidException extends Exception {
 }
