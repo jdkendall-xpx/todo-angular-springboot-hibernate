@@ -1,8 +1,8 @@
-package main.java.com.xpanxion.todo.services;
+package com.xpanxion.todo.services;
 
 import com.xpanxion.todo.domain.TodoEntry;
 import com.xpanxion.todo.repositories.TodoRepository;
-import com.xpanxion.todo.exceptions.InvalidExceptions;
+import com.xpanxion.todo.exceptions.InvalidIdException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
