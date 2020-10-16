@@ -1,11 +1,13 @@
 package com.xpanxion.todo.services;
 
 import com.xpanxion.todo.domain.TodoEntry;
-import com.xpanxion.todo.repositories.TodoRepository;
 import com.xpanxion.todo.exceptions.InvalidIdException;
+import com.xpanxion.todo.repositories.TodoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -13,18 +15,36 @@ public class TodoEntryService {
     @Autowired
     TodoRepository todoRepository;
 
-    public enum UpdateResultType {
-        SUCCESSFUL,
-        INVALID_ID
+    public List getTodos() throws InvalidIdException {
+        // Decide how we want to sort our database results -- here we want to go by createdAt column in descending order
+        Sort sortByCreatedAt = Sort.by(Sort.Direction.DESC, "createdAt");
+
+        // Return all found results
+        List<TodoEntry> results = todoRepository.findAll(sortByCreatedAt);
+        return todoRepository.findAll(sortByCreatedAt);
     }
 
-    interface UpdateResult {}
-    class SuccessfulUpdateResult implements UpdateResult {
-
+    public TodoEntry createTodo(TodoEntry newEntry) {
+        // Save our entry to the database and return the saved entry
+        TodoEntry savedEntry = this.todoRepository.save(newEntry);
+        return savedEntry;
     }
 
-    class InvalidResult implements UpdateResult {
+    public TodoEntry getTodo (long id) throws InvalidIdException {
+        // Get our to-do entry from the database
+        Optional<TodoEntry> originalEntry = todoRepository.findById(id);
 
+        // Check if we found an entry
+        if (originalEntry.isPresent()) {
+            // Use the entry's data
+            TodoEntry entryData = originalEntry.get();
+
+            // get the todo
+            return entryData;
+        } else {
+            // Throwing an invalid ID exception as the ID could not e found in the database
+            throw new InvalidIdException();
+        }
     }
 
     public TodoEntry updateTodo(long id, TodoEntry changes) throws InvalidIdException {
