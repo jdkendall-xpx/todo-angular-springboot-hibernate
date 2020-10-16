@@ -47,6 +47,22 @@ public class TodoEntryService {
         }
     }
 
+    public void deleteTodo(long id) throws InvalidIdException{
+        Optional<TodoEntry> originalEntry = todoRepository.findById(id);
+
+        // Check if we found an entry
+        if (originalEntry.isPresent()) {
+            // Delete the entry we found by ID
+            todoRepository.deleteById(id);
+            //no return required, functions automatically return when completed
+        } else {
+            //Throw an invalid ID exception since we didn't find the entry
+            throw new InvalidIdException();
+
+        }
+
+    }
+
     public TodoEntry updateTodo(long id, TodoEntry changes) throws InvalidIdException {
         // Get our to-do entry from the database
         Optional<TodoEntry> originalEntry = this.todoRepository.findById(id);

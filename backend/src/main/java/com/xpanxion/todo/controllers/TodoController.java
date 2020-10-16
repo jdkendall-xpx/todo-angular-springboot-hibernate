@@ -9,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api")
@@ -85,22 +84,15 @@ public class TodoController {
             // Turn our string into an ID number
             long id = Long.parseLong(idString);
 
-            Optional<TodoEntry> originalEntry = todoRepository.findById(id);
-
-            // Check if we found an entry
-            if (originalEntry.isPresent()) {
-                // Delete the entry we found by ID
-                todoRepository.deleteById(id);
-
-                // Return a 204 OK No Content status, we deleted it
-                return ResponseEntity.noContent().build();
-            } else {
-                // Return a 404 Not Found status, since we didn't find the entry
-                return ResponseEntity.notFound().build();
-            }
+           this.todoEntryService.deleteTodo(id);
+           //Return a 204 OK no content status, we deleted it
+            return ResponseEntity.noContent().build();
         } catch (NumberFormatException ex) {
             // Return a 400 Bad Request response, we did not pass a number as an ID
             return ResponseEntity.badRequest().build();
+        }catch(InvalidIdException ex) {
+            //return a 404 not Found response, we did not find a valid entry for the ID
+            return ResponseEntity.notFound().build();
         }
     }
 }
