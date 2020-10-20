@@ -33,9 +33,8 @@ public class TodoController {
     }
 
     @PostMapping("/todos")
-    public ResponseEntity<TodoEntry> createTodo(@RequestBody TodoEntry todo) {
-        // Save our entry to the database and return the saved entry
-        TodoEntry savedEntry = todoRepository.save(todo);
+    public ResponseEntity<TodoEntry> createTodo(@RequestBody TodoEntry newEntry) {
+        TodoEntry savedEntry = this.todoEntryService.createTodo(newEntry);
         return ResponseEntity.ok().body(savedEntry);
     }
 
@@ -88,22 +87,18 @@ public class TodoController {
         try {
             // Turn our string into an ID number
             long id = Long.parseLong(idString);
-            Optional<TodoEntry> originalEntry = todoRepository.findById(id);
 
-            // Check if we found an entry
-            if (originalEntry.isPresent()) {
-                // Delete the entry we found by ID
-                todoRepository.deleteById(id);
+            this.todoEntryService.deleteTodo(id);
 
-                // Return a 204 OK No Content status, we deleted it
-                return ResponseEntity.noContent().build();
-            } else {
-                // Return a 404 Not Found status, since we didn't find the entry
-                return ResponseEntity.notFound().build();
-            }
+            //Return a 204 OK No Content status, we deleted it
+            return ResponseEntity.noContent().build();
+
         } catch (NumberFormatException ex) {
             // Return a 400 Bad Request response, we did not pass a number as an ID
             return ResponseEntity.badRequest().build();
+        } catch (InvalidIdException ex) {
+            //Return a 404 Not Found response, as we did not find a valid ID in the database
+            return ResponseEntity.notFound().build();
         }
     }
 }
