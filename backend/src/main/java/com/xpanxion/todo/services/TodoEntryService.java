@@ -5,12 +5,31 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.xpanxion.todo.domain.TodoEntry;
 
+import javax.swing.*;
 import java.util.Optional;
 @Service
 public class TodoEntryService {
     @Autowired
     TodoRepository todoRepository;
 
+    public void deleteTodo(long id) throws InvalidIdException {
+        Optional<TodoEntry> originalEntry = this.todoRepository.findById(id);
+        // check if we found an entry
+        if(originalEntry.isPresent()) {
+            //delete the entry we found by ID
+            this.todoRepository.deleteById(id);
+        } else {
+            //throw an invalid ID exception since we didn't find the entry
+        }
+    }
+
+    public TodoEntry createTodo(TodoEntry newEntry ) {
+        // Save our entry to database and return the saved entry
+        TodoEntry savedEntry =  this.todoRepository.save(newEntry);
+
+        return savedEntry;
+
+    }
 
     public TodoEntry updateTodo(long id, TodoEntry changes) throws InvalidIdException {
         // Get our to-do entry from the database
