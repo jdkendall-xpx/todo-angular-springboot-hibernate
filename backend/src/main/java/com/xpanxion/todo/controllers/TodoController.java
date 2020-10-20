@@ -1,14 +1,16 @@
 package com.xpanxion.todo.controllers;
 
 import com.xpanxion.todo.domain.TodoEntry;
+import com.xpanxion.todo.exceptions.InvalidIdException;
 import com.xpanxion.todo.repositories.TodoRepository;
+import com.xpanxion.todo.services.TodoEntryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
+i
 
 @RestController
 @RequestMapping("/api")
@@ -16,6 +18,9 @@ import java.util.Optional;
 public class TodoController {
     @Autowired
     TodoRepository todoRepository;
+
+    @Autowired
+    TodoEntryService todoEntryService;
 
     @GetMapping("/todos")
     public ResponseEntity<List<TodoEntry>> getAllTodos() {
@@ -61,35 +66,19 @@ public class TodoController {
     }
 
     @PutMapping(value = "/todos/{id}")
-    public ResponseEntity<TodoEntry> updateTodo(@PathVariable("id") String idString, @RequestBody TodoEntry todo) {
+    public ResponseEntity<TodoEntry> updateTodo(@PathVariable("id") String idString, @RequestBody TodoEntry todoChanges) {
         try {
             // Turn our string into an ID number
             long id = Long.parseLong(idString);
 
-            // Get our to-do entry from the database
-            Optional<TodoEntry> originalEntry = todoRepository.findById(id);
-
-            // Check if we found an entry
-            if (originalEntry.isPresent()) {
-                // Use the entry's data
-                TodoEntry entryData = originalEntry.get();
-
-                // Update the entry
-                entryData.setTitle(todo.getTitle());
-                entryData.setCompleted(todo.getCompleted());
-
-                // Save the updated version to the database
-                TodoEntry updatedTodo = todoRepository.save(entryData);
-
-                // Return the updated full entry inside a 200 OK response
-                return ResponseEntity.ok().body(updatedTodo);
-            } else {
-                // Return a 404 Not Found status, since we didn't find the entry
-                return ResponseEntity.notFound().build();
-            }
+           TodoEntry result = this.todoEntryService.updateTodo(id, todoChanges);
+           return ResponseEntity.ok().body(result);
         } catch (NumberFormatException ex) {
             // Return a 400 Bad Request response, we did not pass a number as an ID
             return ResponseEntity.badRequest().build();
+        } catch (InvalidIdException ex) {
+        // Return 404 Not Found response, we did not find A VALID entry for the ID
+            return ResponseEntity.notFound().build();
         }
     }
 
@@ -105,15 +94,15 @@ public class TodoController {
                 // Delete the entry we found by ID
                 todoRepository.deleteById(id);
 
-                // Return a 204 OK No Content status, we deleted it
+// Return a 204 OK No Content status, we deleted it
                 return ResponseEntity.noContent().build();
-            } else {
-                // Return a 404 Not Found status, since we didn't find the entry
-                return ResponseEntity.notFound().build();
-            }
-        } catch (NumberFormatException ex) {
-            // Return a 400 Bad Request response, we did not pass a number as an ID
-            return ResponseEntity.badRequest().build();
-        }
-    }
-}
+                        } else {
+                        // Return a 404 Not Found status, since we didn't find the entry
+                        return ResponseEntity.notFound().build();
+                        }
+                        } catch (NumberFormatException ex) {
+                        // Return a 400 Bad Request response, we did not pass a number as an ID
+                        return ResponseEntity.badRequest().build();
+                        }
+                        }
+                        }
