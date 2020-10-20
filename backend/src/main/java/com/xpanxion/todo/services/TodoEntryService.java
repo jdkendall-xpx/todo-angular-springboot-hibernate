@@ -1,8 +1,8 @@
-package com.xpanxion.todo.services;
+package main.java.com.xpanxion.todo.services;
 
 import com.xpanxion.todo.domain.TodoEntry;
-import com.xpanxion.todo.exceptions.InvalidIdException;
 import com.xpanxion.todo.repositories.TodoRepository;
+import com.xpanxion.todo.exceptions.InvalidExceptions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +13,20 @@ public class TodoEntryService {
     @Autowired
     TodoRepository todoRepository;
 
+    public enum UpdateResultType {
+        SUCCESSFUL,
+        INVALID_ID
+    }
+
+    interface UpdateResult {}
+    class SuccessfulUpdateResult implements UpdateResult {
+
+    }
+
+    class InvalidResult implements UpdateResult {
+
+    }
+
     public TodoEntry updateTodo(long id, TodoEntry changes) throws InvalidIdException {
         // Get our to-do entry from the database
         Optional<TodoEntry> originalEntry = this.todoRepository.findById(id);
@@ -22,6 +36,7 @@ public class TodoEntryService {
             // Use the entry's data
             TodoEntry entryData = originalEntry.get();
 
+            // Update the entry
             this.updateEntry(entryData, changes);
 
             // Save the updated version to the database
@@ -30,13 +45,14 @@ public class TodoEntryService {
             // Return the updated full entry
             return updatedTodo;
         } else {
-            // Throwing an invalid ID exception as the ID could not be found in the database
+            // Throwing an invalid ID exception as the ID could not e found in the database
             throw new InvalidIdException();
         }
+
     }
 
     private void updateEntry(TodoEntry entryData, TodoEntry changes) {
-        // Update the entry
+        //update the entry
         if(changes.getTitle() != null) {
             entryData.setTitle(changes.getTitle());
         }
@@ -49,5 +65,9 @@ public class TodoEntryService {
         if(changes.getCreatedAt() != null) {
             entryData.setCreatedAt(changes.getCreatedAt());
         }
+        entryData.setTitle(changes.getTitle());
+        entryData.setDescription(changes.getDescription());
+        entryData.setCreatedAt(changes.getCreatedAt());
+        entryData.setCompleted(changes.getCompleted());
     }
 }

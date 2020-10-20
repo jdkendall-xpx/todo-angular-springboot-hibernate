@@ -1,9 +1,7 @@
 package com.xpanxion.todo.controllers;
 
 import com.xpanxion.todo.domain.TodoEntry;
-import com.xpanxion.todo.exceptions.InvalidIdException;
 import com.xpanxion.todo.repositories.TodoRepository;
-import com.xpanxion.todo.services.TodoEntryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
@@ -73,12 +71,12 @@ public class TodoController {
 
             TodoEntry result = this.todoEntryService.updateTodo(id, todoChanges);
 
-            return ResponseEntity.ok().body(result);
+            return ResponseEntity.ok().body();
         } catch (NumberFormatException ex) {
             // Return a 400 Bad Request response, we did not pass a number as an ID
             return ResponseEntity.badRequest().build();
-        } catch (InvalidIdException ex) {
-            // Return a 404 Not Found response, we did not find a valid entry for the ID
+        } catch(InvalidIdException ex) {
+            //return a 404 not Found response, we did not find a valid entry for the ID
             return ResponseEntity.notFound().build();
         }
     }
