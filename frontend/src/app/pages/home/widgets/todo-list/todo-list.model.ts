@@ -115,6 +115,7 @@ export class TodoListModel {
     const oldValue = this.todosSubject.getValue().find(n => n.id === todo.id);
     const updated: TodoModelState = {...todo, completed: !todo.completed, checkboxDirty: true};
     this.updateInternalTodoEntry(updated);
+    setTimeout(n => {
 
     this.todoApi.updateTodo(updated as TodoEntry)
       .pipe(
@@ -146,6 +147,7 @@ export class TodoListModel {
         })
       )
       .subscribe();
+      }, Math.random() * 5000);
   }
 
   deleteTodoEntry(entry: TodoModelState): void {
