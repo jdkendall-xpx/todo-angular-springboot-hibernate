@@ -65,9 +65,8 @@ public class TodoEntryService {
         if(changes.getCreatedAt() != null) {
             entryData.setCreatedAt(changes.getCreatedAt());
         }
-        entryData.setTitle(changes.getTitle());
-        entryData.setDescription(changes.getDescription());
-        entryData.setCreatedAt(changes.getCreatedAt());
-        entryData.setCompleted(changes.getCompleted());
+        if(changes.getDueOn() != null) {
+            entryData.setDueOn(changes.getDueOn());
+        }
     }
 }
