@@ -4,7 +4,7 @@ export interface TodoEntry {
   description: string;
   createdAt: Date;
   completed: boolean;
-  lastModifiedAt?: Date;
+  lastModified?: Date;
   completedOn?: Date;
   dueOn?: Date;
 }

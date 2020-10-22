@@ -6,6 +6,11 @@ import com.xpanxion.todo.exceptions.InvalidExceptions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+<<<<<<< HEAD
+=======
+import java.time.Instant;
+import java.util.List;
+>>>>>>> f51a29b... Updating completed and completedOn
 import java.util.Optional;
 
 @Service
@@ -59,14 +64,48 @@ public class TodoEntryService {
         if(changes.getDescription() != null) {
             entryData.setDescription(changes.getDescription());
         }
-        if(changes.getCompleted() != null) {
-            entryData.setCompleted(changes.getCompleted());
-        }
         if(changes.getCreatedAt() != null) {
-            entryData.setCreatedAt(changes.getCreatedAt());
+            //Instant currentDate = Instant.now();
+            //String currentDateString = currentDate.toString();
+
+            //entryData.setCreatedAt(currentDateString);
         }
         if(changes.getDueOn() != null) {
             entryData.setDueOn(changes.getDueOn());
+            //Instant currentDate = Instant.now();
+            //String currentDateString = currentDate.toString();
+
+            //entryData.setDueOn(currentDateString);
+        }
+        if(changes.getCompleted() != null) {
+            //entryData.setCompletedOn(changes.getCompletedOn());
+
+            Instant currentDate = Instant.now();
+            String currentDateString = currentDate.toString();
+
+            Boolean isComplete = changes.getCompleted();
+
+            //If a todo is marked complete,
+            if(isComplete == true) {
+                // the database should be updated with a completed at date
+                entryData.setCompleted(true);
+                entryData.setCompletedOn(currentDateString);
+            }
+
+            //If a todo is marked incomplete,
+            else {
+                // the database should be updated with no completed at date
+                entryData.setCompletedOn(null);
+            }
+        }
+        if(changes.getLastModified() != null) {
+
+            //entryData.setLastModified(changes.getLastModified());
+
+            //Instant currentDate = Instant.now();
+            //String currentDateString = currentDate.toString();
+
+            //entryData.setLastModified(currentDateString);
         }
     }
 }

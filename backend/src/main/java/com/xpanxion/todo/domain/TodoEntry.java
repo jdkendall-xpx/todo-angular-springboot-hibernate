@@ -27,12 +27,16 @@ public class TodoEntry {
     @Column(length = 24)
     private String lastModified;
 
+    @Column(length = 24)
+    private String completedOn;
+
     private Boolean completed;
 
     public TodoEntry() {
     }
 
-    public TodoEntry(Long id, String title, String description, String dateCreated, Boolean completed, String dueOn, String lastModified) {
+    public TodoEntry(Long id, String title, String description, String dateCreated,
+                     Boolean completed, String dueOn, String lastModified, String completedOn) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -40,6 +44,7 @@ public class TodoEntry {
         this.completed = completed;
         this.dueOn = dueOn;
         this.lastModified = lastModified;
+        this.completedOn = completedOn;
 
     }
 
@@ -83,19 +88,15 @@ public class TodoEntry {
         this.completed = completed;
     }
 
-    public String getDueOn() {
-        return dueOn;
-    }
+    public String getDueOn() { return dueOn; }
 
-    public void setDueOn(String dueOn) {
-        this.dueOn = dueOn;
-    }
+    public void setDueOn(String dueOn) { this.dueOn = dueOn; }
 
-    public String getLastModified() {
-        return lastModified;
-    }
+    public String getLastModified() { return lastModified; }
 
-    public void setLastModified(String lastModified) {
-        this.lastModified = lastModified;
-    }
+    public void setLastModified(String lastModified) { this.lastModified = lastModified; }
+
+    public String getCompletedOn() { return completedOn; }
+
+    public void setCompletedOn(String completedOn) { this.completedOn = completedOn; }
 }

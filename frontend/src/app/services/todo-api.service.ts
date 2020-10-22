@@ -46,9 +46,9 @@ interface ApiTodoEntry {
   description: string;
   createdAt: string;
   completed: boolean;
-  lastModifiedAt?: Date;
-  completedOn?: Date;
-  dueOn?: Date;
+  lastModified?: string;
+  completedOn?: string;
+  dueOn?: string;
 }
 
 const MAPPINGS = {
@@ -56,21 +56,21 @@ const MAPPINGS = {
     toDomain: (e: ApiTodoEntry): TodoEntry => {
       return {
         ...e,
-       createdAt: new Date(),
-       lastModifiedAt:new Date(document.lastModified),
-       dueOn: new Date(),
-       completedOn: new Date()
-        //lastModifiedAt: e.lastModifiedAt ? new Date(e.lastModifiedAt) : undefined,
-        //completedOn: e.completedOn ? new Date(e.completedOn) : undefined,
-        //dueOn: e.dueOn ? new Date(e.dueOn) : undefined,
+       createdAt: e.createdAt ? new Date(e.createdAt) : undefined,
+       lastModified: e.lastModified ? new Date(e.lastModified) : undefined,
+       completedOn: e.completedOn ? new Date(e.completedOn) : undefined,
+       dueOn: e.dueOn ? new Date(e.dueOn) : undefined,
       };
     },
     toApi: (e: TodoEntry): ApiTodoEntry => {
-      return {...e, createdAt: e.createdAt.toISOString()};
-      //return {...e, lastModified: e.lastModified.toISOString()};
-      //return {...e, completedOn: e.completedOn.toISOString()};
-      //return {...e, dueOn: e.dueOn.toISOString()};
+    return {
+    ...e,
+      createdAt: e.createdAt.toISOString(),
+      lastModified: e.lastModified ? e.lastModified.toISOString() : undefined,
+      completedOn: e.completedOn ? e.completedOn.toISOString() : undefined,
+      dueOn: e.dueOn ? e.dueOn.toISOString() : undefined,
+    };
     }
-  }
+    }
 };
 
