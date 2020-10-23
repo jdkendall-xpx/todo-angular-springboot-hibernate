@@ -53,6 +53,7 @@ interface ApiTodoEntry {
 
 const MAPPINGS = {
   TODO_ENTRY: {
+  //e = server value
     toDomain: (e: ApiTodoEntry): TodoEntry => {
       return {
         ...e,
