@@ -3,11 +3,14 @@ package com.xpanxion.todo.services;
 import com.xpanxion.todo.domain.TodoEntry;
 import com.xpanxion.todo.exceptions.InvalidException;
 import com.xpanxion.todo.repositories.TodoRepository;
+import jdk.nashorn.internal.objects.NativeDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -15,7 +18,9 @@ import java.util.Optional;
 public class TodoEntryServices {
     @Autowired
     TodoRepository todoRepository;
+    SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 
+    Date date= new Date();
     public List getTodos() {
         Sort sortByCreatedAt = Sort.by(Sort.Direction.DESC, "createdAt");
 
@@ -81,9 +86,21 @@ public class TodoEntryServices {
 
 
         }
+        if (changes.getDueOn() != null) {
+
+            entryData.setDueOn(changes.getDueOn());
+
+
+        }
         if (changes.getCreatedAt() != null) {
 
             entryData.setCreatedAt(changes.getCreatedAt());
+
+
+        }
+        if (changes.getCompletedOn() != null) {
+
+            entryData.setCompletedOn(changes.getCompletedOn());
 
 
         }
@@ -91,6 +108,16 @@ public class TodoEntryServices {
 
             entryData.setCompleted(changes.getCompleted());
 
+            // If a todo is marked complete,
+            if(changes.getCompleted() == true) {
+                // the database should be updated with a completed at date
+                entryData.setCompletedOn(event.toISOString());
+            }
+            // If a todo is marked incomplete,
+            else {
+                // the database should be updated with no completed at date
+                entryData.setCompletedOn("Not complete");
+            }
 
         }
     }
