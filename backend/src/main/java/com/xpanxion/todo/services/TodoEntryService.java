@@ -6,6 +6,7 @@ import com.xpanxion.todo.repositories.TodoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.Optional;
 
 @Service
@@ -21,14 +22,14 @@ public class TodoEntryService {
             // Delete the entry we found by ID
             this.todoRepository.deleteById(id);
         } else {
-            // Throw an invalid ID exception since we didn't find the entry since we didn't find the entry
+            // Throw an invalid ID exception since we didn't find the entry
             throw new InvalidIdException();
         }
 
 
     }
 
-    public  TodoEntry createTodo(TodoEntry newEntry){
+    public TodoEntry createTodo(TodoEntry newEntry) {
         // Save our entry to the database and return the saved entry
         TodoEntry savedEntry = this.todoRepository.save(newEntry);
 
@@ -68,13 +69,26 @@ public class TodoEntryService {
             entryData.setDescription((changes.getDescription()));
 
         }
-        if (changes.getCompleted()) {
+
+        if (changes.getCompleted() != null) {
             entryData.setCompleted(changes.getCompleted());
 
+            }
+
+        if(changes.getDueOn() != null) {
+            entryData.setDueOn(changes.getDueOn());
+
         }
+
+        if(changes.getCompletedOn() != null) {
+            entryData.setCompletedOn(changes.getCompletedOn());
+
+        }
+
         if (changes.getCreatedAt() != null) {
             entryData.setCreatedAt(changes.getCreatedAt());
+            }
         }
     }
-}
+
 
