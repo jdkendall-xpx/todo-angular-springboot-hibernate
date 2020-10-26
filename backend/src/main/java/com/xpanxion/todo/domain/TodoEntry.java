@@ -8,6 +8,7 @@ import javax.persistence.Id;
 @Entity
 public class TodoEntry {
 
+
     @Id
     @GeneratedValue
     private Long id;
@@ -21,17 +22,33 @@ public class TodoEntry {
     @Column(length = 24)
     private String createdAt;
 
+
     private Boolean completed;
 
+    @Column(length = 24)
+    private String dueOn;
+
+    @Column(length = 24)
+    private String completedOn;
+
+    @Column(length = 24)
+    private String lastModifiedAt;
+
+
     public TodoEntry() {
+
     }
 
-    public TodoEntry(Long id, String title, String description, String dateCreated, Boolean completed) {
+
+    public TodoEntry(Long id, String title, String description, String dateCreated, Boolean completed, String dateDue, String dateCompleted, String lastModified) {
         this.id = id;
         this.title = title;
         this.description = description;
         this.createdAt = dateCreated;
         this.completed = completed;
+        this.dueOn = dateDue;
+        this.completedOn = dateCompleted;
+        this.lastModifiedAt = lastModified;
     }
 
     public Long getId() {
@@ -72,5 +89,30 @@ public class TodoEntry {
 
     public void setCompleted(Boolean completed) {
         this.completed = completed;
+    }
+
+    public String getDueOn() {
+        return dueOn;
+    }
+
+    public void setDueOn(String dateDue) {
+        this.dueOn = dateDue;
+    }
+
+    public String getCompletedOn() {
+        return completedOn;
+    }
+
+    public void setCompletedOn(String dateCompleted) {
+        this.completedOn = dateCompleted;
+    }
+
+    public String getLastModifiedAt () {
+        return lastModifiedAt;
+
+    }
+    public void  setLastModifiedAt(String lastModified) {
+        this.lastModifiedAt = lastModified;
+
     }
 }

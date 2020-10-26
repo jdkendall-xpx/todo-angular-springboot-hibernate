@@ -1,4 +1,5 @@
 package com.xpanxion.todo.services;
+
 import com.xpanxion.todo.exceptions.InvalidIdException;
 import com.xpanxion.todo.repositories.TodoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +8,7 @@ import com.xpanxion.todo.domain.TodoEntry;
 
 import javax.swing.*;
 import java.util.Optional;
+
 @Service
 public class TodoEntryService {
     @Autowired
@@ -15,7 +17,7 @@ public class TodoEntryService {
     public void deleteTodo(long id) throws InvalidIdException {
         Optional<TodoEntry> originalEntry = this.todoRepository.findById(id);
         // check if we found an entry
-        if(originalEntry.isPresent()) {
+        if (originalEntry.isPresent()) {
             //delete the entry we found by ID
             this.todoRepository.deleteById(id);
         } else {
@@ -23,9 +25,9 @@ public class TodoEntryService {
         }
     }
 
-    public TodoEntry createTodo(TodoEntry newEntry ) {
+    public TodoEntry createTodo(TodoEntry newEntry) {
         // Save our entry to database and return the saved entry
-        TodoEntry savedEntry =  this.todoRepository.save(newEntry);
+        TodoEntry savedEntry = this.todoRepository.save(newEntry);
 
         return savedEntry;
 
@@ -67,9 +69,26 @@ public class TodoEntryService {
         if (changes.getCompleted() != null) {
             entryData.setCompleted(changes.getCompleted());
 
-            if (changes.getCreatedAt() != null) {
+            boolean isCompleted = changes.getCompleted();
+
+            //If todo is marked complete,
+            if (isCompleted == true) {
+                // the database should be updated with a completed at date
+                //entryData.setCompleteOn();
+            }
+            //if a  todo is marked incomplete,
+            else {
+
+
+                // the database should be updated with no completed at date
+                //entryData.setCompletedOn();
+            }
+        }
+
+            if (changes.getCreatedAt() != null){
+
                 entryData.setCreatedAt(changes.getCreatedAt());
             }
         }
     }
-}
+
