@@ -1,11 +1,14 @@
 package com.xpanxion.todo.services;
 
 import com.xpanxion.todo.domain.TodoEntry;
+import com.xpanxion.todo.exceptions.InvalidDueOnException;
 import com.xpanxion.todo.repositories.TodoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.time.DateTimeException;
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
@@ -89,8 +92,23 @@ public class TodoEntryService {
 
             }
             if (changes.getDueOn() != null) {
+                try {
+                    Instant dueOnDate = Instant.parse(changes.getDueOn());
+                    Instant createAtDate = Instant.parse(entryData.getCreatedAt());
 
-                entryData.setDueOn(changes.getDueOn());
+                    if (dueOnDate.isAfter(createAtDate)) {
+                        Instant currentDate = Instant.now();
+                        String currentDateString = currentDate.toString();
+
+                        entryData.setDueOn(currentDateString);
+                    }else{
+                        throw new InvalidDueOnException("Due date was before created on date");
+                    }
+
+                }catch(DateTimeException ex){
+                        throw new RuntimeException("Due date cannot be parsed");
+                    }
+
 
 
             }
@@ -123,6 +141,8 @@ public class TodoEntryService {
 
 
             }
+
+
         }
 
     //delete service method
