@@ -1,9 +1,8 @@
 package com.xpanxion.todo.domain;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
+
+
 
 @Entity
 public class TodoEntry {
@@ -20,23 +19,32 @@ public class TodoEntry {
 
     @Column(length = 24)
     private String createdAt;
+    private String completedOn;
+    private boolean completed;
+    private String dueOn;
+    private String lastModifiedAt;
 
-    private Boolean completed;
 
     public TodoEntry() {
     }
 
-    public TodoEntry(Long id, String title, String description, String dateCreated, Boolean completed) {
+    public TodoEntry(Long id, String title, String description, String dateCreated, String dateCompleted, Boolean completed, String dateDue, String dateLastModified) {
         this.id = id;
         this.title = title;
         this.description = description;
         this.createdAt = dateCreated;
+        this.completedOn = dateCompleted;
         this.completed = completed;
+        this.dueOn = dateDue;
+        this.lastModifiedAt = dateLastModified;
+
+
     }
 
     public Long getId() {
         return id;
     }
+
 
     public void setId(Long id) {
         this.id = id;
@@ -66,6 +74,15 @@ public class TodoEntry {
         this.createdAt = dateCreated;
     }
 
+    public String getCompletedOn() {
+        return completedOn;
+    }
+
+    public void setCompletedOn(String dateCompleted) {
+        this.completedOn = dateCompleted;
+
+    }
+
     public Boolean getCompleted() {
         return completed;
     }
@@ -73,4 +90,23 @@ public class TodoEntry {
     public void setCompleted(Boolean completed) {
         this.completed = completed;
     }
+
+
+    public String getDueOn() {
+        return dueOn;
+    }
+
+    public void setDueOn(String dateDue) {
+        this.dueOn = dateDue;
+    }
+public String getLastModifiedAt() {
+        return lastModifiedAt;
+}
+public void setLastModifiedAt(String dateLastModified){
+        this.lastModifiedAt= dateLastModified;
+}
+    public void setCompletedOn() {
+    }
+
+
 }
