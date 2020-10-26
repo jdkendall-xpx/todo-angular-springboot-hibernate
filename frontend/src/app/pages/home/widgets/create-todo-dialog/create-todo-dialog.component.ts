@@ -21,6 +21,7 @@ export class CreateTodoDialogComponent implements OnInit {
     this.form = this.fb.group({
       title: ['', Validators.required],
       description: ['', Validators.required],
+
     });
   }
 
@@ -30,7 +31,8 @@ export class CreateTodoDialogComponent implements OnInit {
         ...this.form.value,
         id: null,
         completed: false,
-        createdAt: new Date()
+        createdAt: new Date(),
+
       } as TodoEntry;
       this.dialogRef.close(newTodo);
     }

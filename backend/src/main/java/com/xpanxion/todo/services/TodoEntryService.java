@@ -88,9 +88,38 @@ public class TodoEntryService {
 
 
             }
+            if (changes.getDueOn() != null) {
+
+                entryData.setDueOn(changes.getDueOn());
+
+
+            }
+            if (changes.getCompletedOn() != null) {
+
+                entryData.setCompletedOn(changes.getCompletedOn());
+
+
+            }
+            if (changes.getLastModifiedAt() != null) {
+
+                entryData.setLastModifiedAt(changes.getLastModifiedAt());
+
+
+            }
             if (changes.getCompleted() != null) {
 
                 entryData.setCompleted(changes.getCompleted());
+
+                // If a todo is marked complete,
+//                if(changes.getCompleted() == true) {
+//                    // the database should be updated with a completed at date
+//                    entryData.setCompletedOn(formatter.format(date));
+//                }
+                // If a todo is marked incomplete,
+//                else {
+//                    // the database should be updated with no completed at date
+//                    entryData.setCompletedOn("Not complete");
+//                }
 
 
             }

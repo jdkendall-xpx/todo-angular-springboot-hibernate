@@ -46,9 +46,9 @@ interface ApiTodoEntry {
   description: string;
   createdAt: string;
   completed: boolean;
-  lastModifiedAt?: Date;
-  completedOn?: Date;
-  dueOn?: Date;
+  lastModifiedAt?: string;
+  completedOn?: string;
+  dueOn?: string;
 }
 
 const MAPPINGS = {
@@ -63,7 +63,13 @@ const MAPPINGS = {
       };
     },
     toApi: (e: TodoEntry): ApiTodoEntry => {
-      return {...e, createdAt: e.createdAt.toISOString()};
+      return {
+        ...e,
+        createdAt: e.createdAt.toISOString(),
+        lastModifiedAt: e.lastModifiedAt ? e.lastModifiedAt.toISOString() : undefined,
+        completedOn: e.completedOn ? e.completedOn.toISOString() : undefined,
+        dueOn: e.dueOn ? e.dueOn.toISOString() : undefined
+      };
     }
   }
 };
