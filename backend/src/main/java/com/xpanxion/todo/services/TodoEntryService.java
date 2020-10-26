@@ -22,6 +22,7 @@ public class TodoEntryService {
             this.todoRepository.deleteById(id);
         } else {
             //throw an invalid ID exception since we didn't find the entry
+            throw new InvalidIdException();
         }
     }
 
@@ -72,22 +73,38 @@ public class TodoEntryService {
             boolean isCompleted = changes.getCompleted();
 
             //If todo is marked complete,
-            if (isCompleted == true) {
-                // the database should be updated with a completed at date
-                //entryData.setCompleteOn();
-            }
-            //if a  todo is marked incomplete,
-            else {
+            //if (isCompleted == true) {
+            // the database should be updated with a completed at date
+            //entryData.setCompleteOn();
+        }
+        //if a  todo is marked incomplete,
+        // else {
 
 
-                // the database should be updated with no completed at date
-                //entryData.setCompletedOn();
-            }
+        // the database should be updated with no completed at date
+        //entryData.setCompletedOn();
+
+  //  }
+//}
+
+        if(changes.getDueOn() != null) {
+            entryData.setDueOn(changes.getDueOn());
+
+        }
+
+        if(changes.getCompletedOn() != null) {
+            entryData.setCompletedOn(changes.getCompletedOn());
+
         }
 
             if (changes.getCreatedAt() != null){
 
                 entryData.setCreatedAt(changes.getCreatedAt());
+
+                if(changes.getLastModifiedAt() != null) {
+
+                    entryData.setLastModifiedAt(changes.getLastModifiedAt());
+                }
             }
         }
     }
