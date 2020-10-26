@@ -32,6 +32,9 @@ public class TodoEntry {
 
     private Boolean completed;
 
+    @Column(length = 24)
+    private String lastModifiedAt;
+
 
 
     public TodoEntry() {
@@ -91,5 +94,11 @@ public class TodoEntry {
     public Boolean getCompleted() { return completed; }
 
     public void setCompleted(Boolean completed) { this.completed = completed; }
+
+    public String getLastModifiedAt () { return lastModifiedAt; }
+
+    public void setLastModifiedAt(String lastModified) { this.lastModifiedAt = lastModified; }
+
+
 
 }
