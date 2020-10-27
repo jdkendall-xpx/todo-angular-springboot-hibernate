@@ -1,0 +1,137 @@
+@import '~@angular/material/theming';
+
+.todo-card {
+  min-height: 300px;
+  min-width: 400px;
+  max-width: 400px;
+  margin: 4px 4px;
+  color: $light-primary-text;
+}
+
+.edit-hover .card-buttons {
+  display: none;
+  visibility: hidden;
+}
+
+.edit-hover :hover .card-buttons {
+  display: block;
+  visibility: visible;
+}
+
+.card-buttons {
+  position: relative;
+  top: 0;
+  right: 0;
+  font-size: 1.5rem;
+  user-select: none;
+}
+
+.card-buttons a {
+  cursor: pointer;
+  color: inherit;
+  display: block;
+}
+
+.card-buttons-normal :hover {
+  color: hsl(270, 50%, 70%);
+}
+
+.card-buttons-error :hover {
+  color: hsl(151, 80%, 70%);
+}
+
+.card-title {
+  font-size: 0.8em;
+  line-height: 1.25em;
+}
+
+.card-description {
+  color: darken($light-primary-text, 10);
+  font-family: Helvetica, "Helvetica Neue", "Noto Sans", serif;
+  font-size: 1.1em;
+}
+
+.pending {
+  color: gray !important;
+}
+
+.error {
+  color: red !important;
+}
+
+.errorFloater {
+  display: none;
+  position: absolute;
+  left: -10em;
+  font-size: 0.6em;
+  background: darkred;
+  color: white;
+  font-weight: bold;
+  padding-right: 1em;
+  padding-left: 1em;
+}
+
+.edit-hover :hover .errorFloater {
+  display: block;
+}
+
+.calendar-icon {
+  font-size: 1.5em;
+  vertical-align: middle;
+  margin-right: 2px;
+}
+
+.card-created-at {
+  color: darken($light-primary-text, 25);
+}
+
+.card-completed-at {
+  color: darken($light-primary-text, 25);
+}
+
+.card-due-on {
+  color: darken($light-primary-text, 25);
+}
+
+.card-last-modified-at {
+  color: darken($light-primary-text, 25);
+}
+
+.post-dirty {
+  opacity: 0.5 !important;
+}
+
+.post-error {
+  background-color: #620017 !important;
+}
+
+.todo-metadata-fields {
+  margin: 2px auto 16px;
+  padding: 8px 4px 2px;
+  border: 1px solid hsl(270, 0%, 52%);
+  border-radius: 6px;
+}
+
+.todo-title {
+  min-height: 4.5rem;
+}
+
+@media screen and (max-width: 400px) {
+  .todo-card {
+    min-width: 320px;
+    max-width: 320px;
+  }
+
+  .todo-metadata-fields {
+    margin: 2px -6px 8px;
+    padding: 1px 1px 8px;
+    border: none;
+  }
+}
+
+@media screen and (min-width: 400px) and (max-width: 959px) {
+  .todo-card {
+    min-width: 380px;
+    max-width: 380px;
+  }
+}

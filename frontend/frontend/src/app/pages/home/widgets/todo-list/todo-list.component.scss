@@ -1,0 +1,13 @@
+.card-deck-container {
+  position: relative;
+  padding-top: 2em;
+  margin: auto;
+}
+
+.todo-card {
+  padding: 0 0.25em;
+}
+
+.card-deck-container > *:not(:last-child) {
+  margin-bottom: 12px;
+}

@@ -1,0 +1,27 @@
+.flex-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: stretch;
+  width: 100%;
+  height: 100%;
+}
+
+.toolbar {
+  flex: 0 0 auto;
+}
+
+.drawer-container {
+  flex: 1 1 auto;
+}
+
+.drawer {
+  min-width: 10%;
+}
+
+.drawer-content {
+  margin: auto;
+}
+
+.link-active {
+  font-weight: bold;
+}

@@ -1,0 +1,13 @@
+<div class="card-deck-container"
+     fxLayout="row wrap" fxLayoutAlign="center" fxLayoutGap="10px grid"
+     fxLayout.lt-md="column" fxLayoutAlign.lt-md="start center">
+  <ng-container *ngFor="let todo of model.$todos | async">
+    <app-todo-card
+      [todo]="todo" (toggle)="onToggleTodoCompletedState(todo)"
+      (edit)="onEditCard(todo)"
+      (delete)="onDeleteCard(todo)"
+      (retry)="onRetry(todo)"
+      (cancel)="onCancel(todo)"
+      class="todo-card"></app-todo-card>
+  </ng-container>
+</div>

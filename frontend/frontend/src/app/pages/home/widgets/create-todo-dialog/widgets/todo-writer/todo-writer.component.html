@@ -1,0 +1,31 @@
+<div class="dialog-box" fxLayout="column" fxLayoutGap="start stretch" [formGroup]="formGroup">
+  <div>
+    <mat-form-field color="accent" appearance="outline" style="width: 100%;">
+      <mat-label>Title</mat-label>
+      <input matInput class="title-input" placeholder="Title" formControlName="title" aria-label="Title text field"
+             required>
+      <mat-error *ngIf="formGroup?.controls['description'].invalid">Please enter a title.</mat-error>
+    </mat-form-field>
+  </div>
+
+  <div>
+    <mat-form-field color="accent" appearance="outline" style="width: 100%;">
+      <mat-label>Description</mat-label>
+      <textarea class="desc-textarea" matInput placeholder="Description"
+                formControlName="description" aria-label="Description text field" required></textarea>
+      <mat-error *ngIf="formGroup?.controls['description'].invalid">Please enter a description.</mat-error>
+    </mat-form-field>
+  </div>
+  <div>
+
+      <label for="dueOn">Due date:</label>
+
+      <input type="date" id="dueOn" name="dueOn" placeholder="dueOn" formControlName="dueOn"
+             value="2018-07-22"
+             min="2018-01-01" max="2018-12-31">
+
+
+  </div>
+
+
+</div>

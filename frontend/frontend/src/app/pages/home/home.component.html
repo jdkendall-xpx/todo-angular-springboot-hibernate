@@ -1,0 +1,9 @@
+<main class="todo-feed">
+  <div class="text-center"><span class="todo-feed-title align-middle">Current Todo List</span>
+    <button class="create-new-todo-btn" mat-fab color="accent" (click)="openNewTodoDialog()"
+            aria-label="Create new to-do entry">
+      <mat-icon>add</mat-icon>
+    </button>
+  </div>
+  <app-todo-list [model]="model"></app-todo-list>
+</main>

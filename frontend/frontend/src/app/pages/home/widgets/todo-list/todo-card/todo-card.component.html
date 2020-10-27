@@ -1,0 +1,68 @@
+<div class="edit-hover">
+  <mat-card class="todo-card mat-elevation-z8" [class.post-dirty]="todo.newPostDirty || todo.postDirty"
+            [class.post-error]="todo.newPostError || todo.postError || todo.checkboxError">
+    <mat-card-title>
+      <div fxLayout="row" fxLayoutAlign="start stretch" class="todo-title">
+        <div fxFlexFill fxFlexAlign="start" class="card-title">
+          <div fxLayout="row" fxLayoutGap=".4em">
+            <div fxFlexAlign="stretch">
+              <div class="errorFloater" *ngIf="todo.checkboxError">Error updating todo</div>
+              <app-toggle-checkbox [state]="todo.completed" [class.pending]="todo.checkboxDirty"
+                                   [class.error]="todo.checkboxError"
+                                   (toggle)="onToggle()"></app-toggle-checkbox>
+            </div>
+            <div fxFlex="95">{{todo.title}}</div>
+            <div
+              class="card-buttons"
+              [class.card-buttons-normal]="!(todo.newPostError || todo.postError || todo.checkboxError)"
+              [class.card-buttons-error]="todo.newPostError || todo.postError || todo.checkboxError"
+              *ngIf="!(todo.checkboxDirty || todo.postDirty || todo.newPostDirty)">
+              <div *ngIf="todo.postError || todo.newPostError || todo.checkboxError; then error ; else edit"></div>
+              <ng-template #edit>
+                <a (click)="onEdit()">
+                  <mat-icon [inline]="true">edit</mat-icon>
+                </a>
+                <a (click)="onDelete()">
+                  <mat-icon [inline]="true">delete</mat-icon>
+                </a>
+              </ng-template>
+              <ng-template #error>
+                <a (click)="onFailRetry()">
+                  <mat-icon [inline]="true">refresh</mat-icon>
+                </a>
+                <a (click)="onFailDiscard()">
+                  <mat-icon [inline]="true">cancel</mat-icon>
+                </a>
+              </ng-template>
+            </div>
+          </div>
+        </div>
+      </div>
+    </mat-card-title>
+    <mat-card-content>
+      <div class="todo-metadata-fields">
+        <mat-grid-list cols="2" rowHeight="2em">
+          <mat-grid-tile title="Created At" class="todo-metadata-field">
+            <mat-icon [inline]="true" class="calendar-icon pr-1">today</mat-icon>
+            <span class="card-created-at">{{todo.createdAt.toDateString()}}</span>
+          </mat-grid-tile>
+          <mat-grid-tile *ngIf="todo.lastModifiedAt" title="Last Modified At" class="todo-metadata-field">
+            <mat-icon [inline]="true" class="calendar-icon pr-1">update</mat-icon>
+            <span class="card-last-modified-at">{{todo.lastModifiedAt?.toDateString()}}</span>
+          </mat-grid-tile>
+          <mat-grid-tile *ngIf="todo.completedOn" title="Completed On" class="todo-metadata-field">
+            <mat-icon [inline]="true" class="calendar-icon pr-1">event_available</mat-icon>
+            <span class="card-completed-at">{{todo.completedOn?.toDateString()}}</span>
+          </mat-grid-tile>
+          <mat-grid-tile *ngIf="todo.dueOn" title="Due On" class="todo-metadata-field">
+            <mat-icon [inline]="true" class="calendar-icon pr-1">notifications_active</mat-icon>
+            <span class="card-due-on">{{todo.dueOn?.toDateString()}}</span>
+          </mat-grid-tile>
+        </mat-grid-list>
+      </div>
+      <div>
+        <span class="card-description">{{todo.description}}</span>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

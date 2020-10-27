@@ -1,0 +1,25 @@
+@media screen and (min-width: 500px) {
+  .dialog-box {
+    min-width: 400px;
+    max-width: 90%;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .dialog-box {
+    min-width: 100%;
+  }
+
+  .title-input {
+    min-width: 80%;
+  }
+
+  .desc-textarea {
+    min-width: 80%;
+  }
+}
+
+.desc-textarea {
+  min-height: 300px;
+  resize: none;
+}
