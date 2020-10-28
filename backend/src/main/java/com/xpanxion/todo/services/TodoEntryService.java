@@ -77,18 +77,21 @@ public class TodoEntryService {
             if (changes.getTitle() != null) {
 
                 entryData.setTitle(changes.getTitle());
-
+                //modify date after entries are made
+                getLastModifiedDate(entryData,changes);
             }
             if (changes.getDescription() != null) {
 
                 entryData.setDescription(changes.getDescription());
-
+                //modify date after entries are made
+                getLastModifiedDate(entryData,changes);
 
             }
             if (changes.getCreatedAt() != null) {
 
                 entryData.setCreatedAt(changes.getCreatedAt());
-
+                //modify date after entries are made
+                getLastModifiedDate(entryData,changes);
 
             }
             if (changes.getDueOn() != null) {
@@ -101,6 +104,8 @@ public class TodoEntryService {
                         String currentDateString = currentDate.toString();
 
                         entryData.setDueOn(currentDateString);
+                        //modify date after entries are made
+                        getLastModifiedDate(entryData,changes);
                     }else{
                         throw new InvalidDueOnException("Due date was before created on date");
                     }
@@ -112,38 +117,45 @@ public class TodoEntryService {
 
 
             }
-            if (changes.getCompletedOn() != null) {
-
-                entryData.setCompletedOn(changes.getCompletedOn());
 
 
-            }
-            if (changes.getLastModifiedAt() != null) {
-
-                entryData.setLastModifiedAt(changes.getLastModifiedAt());
-
-
-            }
             if (changes.getCompleted() != null) {
 
                 entryData.setCompleted(changes.getCompleted());
+                //modify date after entries are made
+                getLastModifiedDate(entryData,changes);
 
-                // If a todo is marked complete,
-//                if(changes.getCompleted() == true) {
-//                    // the database should be updated with a completed at date
-//                    entryData.setCompletedOn(formatter.format(date));
-//                }
+                //change completed on date
+                if(changes.getCompleted() == true) {
+                    //the database should be updated with a completed at date
+                    entryData.setCompletedOn(Instant.now().toString());
+                    //modify date after entries are made
+                    getLastModifiedDate(entryData,changes);
+                }
                 // If a todo is marked incomplete,
-//                else {
+                else {
 //                    // the database should be updated with no completed at date
-//                    entryData.setCompletedOn("Not complete");
-//                }
+                    entryData.setCompletedOn("Not complete");
+                }
+
 
 
             }
 
 
+
         }
+
+        //update last modified date after a change is made
+    private void getLastModifiedDate(TodoEntry entryData, TodoEntry changes){
+        changes.setLastModifiedAt(Instant.now().toString());
+        entryData.setLastModifiedAt(changes.getLastModifiedAt());
+
+
+
+
+    }
+
 
     //delete service method
 
