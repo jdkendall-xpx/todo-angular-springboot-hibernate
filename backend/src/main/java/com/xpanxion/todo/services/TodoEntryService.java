@@ -1,5 +1,6 @@
 package com.xpanxion.todo.services;
 
+import com.xpanxion.todo.exceptions.InvalidDueOnException;
 import com.xpanxion.todo.exceptions.InvalidIdException;
 import com.xpanxion.todo.repositories.TodoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +8,9 @@ import org.springframework.stereotype.Service;
 import com.xpanxion.todo.domain.TodoEntry;
 
 import javax.swing.*;
+import java.time.DateTimeException;
+import java.time.Instant;
+import java.util.Date;
 import java.util.Optional;
 
 @Service
@@ -60,52 +64,78 @@ public class TodoEntryService {
     }
 
     private void updateEntry(TodoEntry entryData, TodoEntry changes) {
+        boolean changedTitle = false;
         // Update the entry
         if (changes.getTitle() != null) {
-            entryData.setTitle(changes.getDescription());
+            entryData.setTitle(changes.getTitle());
+            changedTitle = true;
+            //change modified date
+            changeLastModifiedAtDate(entryData,changes);
+
         }
         if (changes.getDescription() != null) {
             entryData.setDescription(changes.getDescription());
+            //change modified date
+            changeLastModifiedAtDate(entryData,changes);
+
         }
         if (changes.getCompleted() != null) {
             entryData.setCompleted(changes.getCompleted());
 
-            boolean isCompleted = changes.getCompleted();
+            if(changes.getCompleted() ==true){
+            entryData.setCompletedOn(Instant.now().toString());
+                //change modified date
+                changeLastModifiedAtDate(entryData,changes);
+            }
+            else{
+                entryData.setCompletedOn("Task not completed");
+                //change modified date
+                changeLastModifiedAtDate(entryData,changes);
+            }
 
-            //If todo is marked complete,
-            //if (isCompleted == true) {
-            // the database should be updated with a completed at date
-            //entryData.setCompleteOn();
-        }
-        //if a  todo is marked incomplete,
-        // else {
-
-
-        // the database should be updated with no completed at date
-        //entryData.setCompletedOn();
-
-  //  }
-//}
-
-        if(changes.getDueOn() != null) {
-            entryData.setDueOn(changes.getDueOn());
 
         }
 
-        if(changes.getCompletedOn() != null) {
-            entryData.setCompletedOn(changes.getCompletedOn());
+        if (changes.getDueOn() != null) {
+            try {
+                Instant dueOnDate = Instant.parse(changes.getDueOn());
+                Instant createAtDate = Instant.parse(entryData.getCreatedAt());
+
+                if (dueOnDate.isAfter(createAtDate)) {
+                    Instant currentDate = Instant.now();
+                    String currentDateString = currentDate.toString();
+
+                    entryData.setDueOn(currentDateString);
+                    //modify date after entries are made
+                    //change modified date
+                    changeLastModifiedAtDate(entryData,changes);
+                }else{
+                    throw new InvalidDueOnException("Due date was before created on date");
+                }
+
+            }catch(DateTimeException ex){
+                throw new RuntimeException("Due date cannot be parsed");
+            }
+
+
 
         }
 
-            if (changes.getCreatedAt() != null){
+        if (changes.getCreatedAt() != null){
 
                 entryData.setCreatedAt(changes.getCreatedAt());
 
-                if(changes.getLastModifiedAt() != null) {
 
-                    entryData.setLastModifiedAt(changes.getLastModifiedAt());
-                }
+               // System.out.printf("Did we change title?%s%n",
+                        //(changedTitle ? "Yes : No"));
             }
+
+
+
         }
+     private void changeLastModifiedAtDate(TodoEntry entryData, TodoEntry changes) {
+      changes.setLastModifiedAt(Instant.now().toString());
+         entryData.setLastModifiedAt(changes.getLastModifiedAt());
+    }
     }
 
