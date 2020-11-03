@@ -1,6 +1,7 @@
 package com.xpanxion.todo.services;
 
 import com.xpanxion.todo.exceptions.InvalidDueOnException;
+import com.xpanxion.todo.domain.TodoEntry;
 import com.xpanxion.todo.exceptions.InvalidIdException;
 import com.xpanxion.todo.repositories.TodoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +41,7 @@ public class TodoEntryService {
 
     public TodoEntry updateTodo(long id, TodoEntry changes) throws InvalidIdException {
         // Get our to-do entry from the database
-        Optional<TodoEntry> originalEntry = todoRepository.findById(id);
+        Optional<TodoEntry> originalEntry = this.todoRepository.findById(id);
 
         // Check if we found an entry
         if (originalEntry.isPresent()) {
@@ -50,7 +51,7 @@ public class TodoEntryService {
             this.updateEntry(entryData, changes);
 
             // Save the updated version to the database
-            TodoEntry updatedTodo = todoRepository.save(entryData);
+            TodoEntry updatedTodo = this.todoRepository.save(entryData);
 
             // Return the updated full entry
             return updatedTodo;
