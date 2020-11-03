@@ -1,6 +1,7 @@
 package com.xpanxion.todo.services;
 
 import com.xpanxion.todo.domain.TodoEntry;
+import com.xpanxion.todo.domain.TodoEntryChanges;
 import com.xpanxion.todo.exceptions.InvalidIdException;
 import com.xpanxion.todo.repositories.TodoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,16 +14,17 @@ public class TodoEntryService {
     @Autowired
     TodoRepository todoRepository;
 
-    public TodoEntry updateTodo(long id, TodoEntry changes) throws InvalidIdException {
+    public TodoEntry updateTodo(TodoEntryChanges entryChanges) throws InvalidIdException {
+
         // Get our to-do entry from the database
-        Optional<TodoEntry> originalEntry = this.todoRepository.findById(id);
+        Optional<TodoEntry> originalEntry = this.todoRepository.findById(entryChanges.getId());
 
         // Check if we found an entry
         if (originalEntry.isPresent()) {
             // Use the entry's data
             TodoEntry entryData = originalEntry.get();
 
-            this.updateEntry(entryData, changes);
+            this.updateEntry(entryData, entryChanges);
 
             // Save the updated version to the database
             TodoEntry updatedTodo = this.todoRepository.save(entryData);
@@ -35,19 +37,19 @@ public class TodoEntryService {
         }
     }
 
-    private void updateEntry(TodoEntry entryData, TodoEntry changes) {
+    private void updateEntry(TodoEntry entryData, TodoEntryChanges changes) {
         // Update the entry
-        if(changes.getTitle() != null) {
-            entryData.setTitle(changes.getTitle());
+        if(changes.getTitle().isPresent()) {
+            entryData.setTitle(changes.getTitle().get());
         }
-        if(changes.getDescription() != null) {
-            entryData.setDescription(changes.getDescription());
+        if(changes.getDescription().isPresent()) {
+            entryData.setDescription(changes.getDescription().get());
         }
-        if(changes.getCompleted() != null) {
-            entryData.setCompleted(changes.getCompleted());
+        if(changes.getCompleted().isPresent()) {
+            entryData.setCompleted(changes.getCompleted().get());
         }
-        if(changes.getCreatedAt() != null) {
-            entryData.setCreatedAt(changes.getCreatedAt());
+        if(changes.getCreatedAt().isPresent()) {
+            entryData.setCreatedAt(changes.getCreatedAt().get());
         }
     }
 }

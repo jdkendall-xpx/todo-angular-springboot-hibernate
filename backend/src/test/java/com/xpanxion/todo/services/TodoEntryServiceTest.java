@@ -1,6 +1,7 @@
 package com.xpanxion.todo.services;
 
 import com.xpanxion.todo.domain.TodoEntry;
+import com.xpanxion.todo.domain.TodoEntryChanges;
 import com.xpanxion.todo.exceptions.InvalidIdException;
 import com.xpanxion.todo.repositories.TodoRepository;
 import org.junit.jupiter.api.Test;
@@ -27,19 +28,19 @@ class TodoEntryServiceTest {
         // Given
         // the user calls with no changes to be made
         long id = 1;
-        TodoEntry changes = new TodoEntry(
-        null,
-        null,
-        null,
-        null,
-        null
+        TodoEntryChanges changes = new TodoEntryChanges(
+                id,
+                Optional.empty(),
+                Optional.empty(),
+                Optional.empty(),
+                Optional.empty()
         );
         TodoEntry dbEntry = new TodoEntry(
-            id,
-            "Title B",
-            "Description B",
-            "2020-10-21T13:33:41.000Z",
-            true
+                id,
+                "Title B",
+                "Description B",
+                "2020-10-21T13:33:41.000Z",
+                true
         );
 
         Mockito.when(mockTodoRepository.findById(id))
@@ -50,7 +51,7 @@ class TodoEntryServiceTest {
 
         // When
         // we call updateTodo on an entry with that changeset
-        TodoEntry result = this.testee.updateTodo(id, changes);
+        TodoEntry result = this.testee.updateTodo(changes);
 
         // Then
         // nothing should have changed
@@ -62,16 +63,16 @@ class TodoEntryServiceTest {
     }
 
     @Test
-    void testUpdateTodo_HappyPath_TitleChanged_WithUppercase() throws InvalidIdException {
+    void testUpdateTodo_HappyPath_TitleChanged() throws InvalidIdException {
         // Given
         // the user calls with a changed title
         long id = 1;
-        TodoEntry changes = new TodoEntry(
-                null,
-                "New Title",
-                null,
-                null,
-                null
+        TodoEntryChanges changes = new TodoEntryChanges(
+                id,
+                Optional.of("New Title"),
+                Optional.empty(),
+                Optional.empty(),
+                Optional.empty()
         );
         TodoEntry dbEntry = new TodoEntry(
                 id,
@@ -85,7 +86,7 @@ class TodoEntryServiceTest {
 
         // When
         // we call updateTodo on an entry with that changeset
-        TodoEntry result = this.testee.updateTodo(id, changes);
+        TodoEntry result = this.testee.updateTodo(changes);
 
         // Then
         // The title should have changed, but nothing else
@@ -101,12 +102,12 @@ class TodoEntryServiceTest {
         // Given
         // the user calls with a changed title
         long id = 1;
-        TodoEntry changes = new TodoEntry(
-                null,
-                null,
-                "New Description",
-                null,
-                null
+        TodoEntryChanges changes = new TodoEntryChanges(
+                id,
+                Optional.empty(),
+                Optional.of("New Description"),
+                Optional.empty(),
+                Optional.empty()
         );
         TodoEntry dbEntry = new TodoEntry(
                 id,
@@ -120,7 +121,7 @@ class TodoEntryServiceTest {
 
         // When
         // we call updateTodo on an entry with that changeset
-        TodoEntry result = this.testee.updateTodo(id, changes);
+        TodoEntry result = this.testee.updateTodo(changes);
 
         // Then
         // The title should have changed, but nothing else
@@ -136,12 +137,12 @@ class TodoEntryServiceTest {
         // Given
         // the user calls with a changed title
         long id = 1;
-        TodoEntry changes = new TodoEntry(
-                null,
-                null,
-                null,
-                null,
-                false
+        TodoEntryChanges changes = new TodoEntryChanges(
+                id,
+                Optional.empty(),
+                Optional.empty(),
+                Optional.empty(),
+                Optional.of(false)
         );
         TodoEntry dbEntry = new TodoEntry(
                 id,
@@ -155,7 +156,7 @@ class TodoEntryServiceTest {
 
         // When
         // we call updateTodo on an entry with that changeset
-        TodoEntry result = this.testee.updateTodo(id, changes);
+        TodoEntry result = this.testee.updateTodo(changes);
 
         // Then
         // The title should have changed, but nothing else
@@ -171,12 +172,12 @@ class TodoEntryServiceTest {
         // Given
         // the user calls with a changed title
         long id = 1;
-        TodoEntry changes = new TodoEntry(
-                null,
-                null,
-                null,
-                "2020-08-15T13:33:41.000Z",
-                null
+        TodoEntryChanges changes = new TodoEntryChanges(
+                id,
+                Optional.empty(),
+                Optional.empty(),
+                Optional.of("2020-08-15T13:33:41.000Z"),
+                Optional.empty()
         );
         TodoEntry dbEntry = new TodoEntry(
                 id,
@@ -190,7 +191,7 @@ class TodoEntryServiceTest {
 
         // When
         // we call updateTodo on an entry with that changeset
-        TodoEntry result = this.testee.updateTodo(id, changes);
+        TodoEntry result = this.testee.updateTodo(changes);
 
         // Then
         // The title should have changed, but nothing else
@@ -205,10 +206,16 @@ class TodoEntryServiceTest {
     void testUpdateTodo_InvalidId() {
         // Given
         long id = 100;
-        TodoEntry changes = new TodoEntry();
+        TodoEntryChanges changes = new TodoEntryChanges(
+                id,
+                Optional.empty(),
+                Optional.empty(),
+                Optional.empty(),
+                Optional.empty()
+        );
         Mockito.when(mockTodoRepository.findById(id)).thenReturn(Optional.empty());
 
         // When/Then
-        assertThrows(InvalidIdException.class, () -> this.testee.updateTodo(id, changes));
+        assertThrows(InvalidIdException.class, () -> this.testee.updateTodo(changes));
     }
 }
