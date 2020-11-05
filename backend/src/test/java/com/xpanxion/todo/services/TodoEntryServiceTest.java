@@ -32,6 +32,9 @@ class TodoEntryServiceTest {
         null,
         null,
         null,
+        null,
+        null,
+        null,
         null
         );
         TodoEntry dbEntry = new TodoEntry(
@@ -39,7 +42,10 @@ class TodoEntryServiceTest {
             "Title B",
             "Description B",
             "2020-10-21T13:33:41.000Z",
-            true
+            true,
+            "2020-10-21T13:33:41.000Z",
+            "2020-10-21T13:33:41.000Z",
+            "2020-10-21T13:33:41.000Z"
         );
 
         Mockito.when(mockTodoRepository.findById(id))
@@ -59,6 +65,9 @@ class TodoEntryServiceTest {
         assertEquals("Description B", result.getDescription());
         assertEquals("2020-10-21T13:33:41.000Z", result.getCreatedAt());
         assertTrue(result.getCompleted());
+        assertEquals("2020-10-21T13:33:41.000Z", result.getDueOn());
+        assertEquals("2020-10-21T13:33:41.000Z",result.getLastModified());
+        assertEquals("2020-10-21T13:33:41.000Z",result.getCompletedOn());
     }
 
     @Test
@@ -71,6 +80,9 @@ class TodoEntryServiceTest {
                 "New Title",
                 null,
                 null,
+                null,
+                null,
+                null,
                 null
         );
         TodoEntry dbEntry = new TodoEntry(
@@ -78,7 +90,10 @@ class TodoEntryServiceTest {
                 "Title B",
                 "Description B",
                 "2020-10-21T13:33:41.000Z",
-                true
+                true,
+                "2020-10-21T13:33:41.000Z",
+                "2020-10-21T13:33:41.000Z",
+                "2020-10-21T13:33:41.000Z"
         );
         Mockito.when(mockTodoRepository.findById(id)).thenReturn(Optional.of(dbEntry));
         Mockito.when(mockTodoRepository.save(dbEntry)).thenReturn(dbEntry);
@@ -94,17 +109,23 @@ class TodoEntryServiceTest {
         assertEquals("Description B", result.getDescription());
         assertEquals("2020-10-21T13:33:41.000Z", result.getCreatedAt());
         assertTrue(result.getCompleted());
+        assertEquals("2020-10-21T13:33:41.000Z",result.getDueOn());
+        assertEquals("2020-10-21T13:33:41.000Z",result.getLastModified());
+        assertEquals("2020-10-21T13:33:41.000Z",result.getCompletedOn());
     }
 
     @Test
     void testUpdateTodo_HappyPath_DescriptionChanged() throws InvalidIdException {
         // Given
-        // the user calls with a changed title
+        // the user calls with a changed description
         long id = 1;
         TodoEntry changes = new TodoEntry(
                 null,
                 null,
                 "New Description",
+                null,
+                null,
+                null,
                 null,
                 null
         );
@@ -113,7 +134,10 @@ class TodoEntryServiceTest {
                 "Title B",
                 "Description B",
                 "2020-10-21T13:33:41.000Z",
-                true
+                true,
+                "2020-10-21T13:33:41.000Z",
+                "2020-10-21T13:33:41.000Z",
+                "2020-10-21T13:33:41.000Z"
         );
         Mockito.when(mockTodoRepository.findById(id)).thenReturn(Optional.of(dbEntry));
         Mockito.when(mockTodoRepository.save(dbEntry)).thenReturn(dbEntry);
@@ -129,26 +153,35 @@ class TodoEntryServiceTest {
         assertEquals("New Description", result.getDescription());
         assertEquals("2020-10-21T13:33:41.000Z", result.getCreatedAt());
         assertTrue(result.getCompleted());
+        assertEquals("2020-10-21T13:33:41.000Z",result.getDueOn());
+        assertEquals("2020-10-21T13:33:41.000Z",result.getLastModified());
+        assertEquals("2020-10-21T13:33:41.000Z",result.getCompletedOn());
     }
 
     @Test
     void testUpdateTodo_HappyPath_CompletedChanged() throws InvalidIdException {
         // Given
-        // the user calls with a changed title
+        // the user calls with a completion change
         long id = 1;
         TodoEntry changes = new TodoEntry(
                 null,
                 null,
                 null,
                 null,
-                false
+                true,
+                null,
+                null,
+                null
         );
         TodoEntry dbEntry = new TodoEntry(
                 id,
                 "Title B",
                 "Description B",
                 "2020-10-21T13:33:41.000Z",
-                true
+                false,
+                "2020-10-21T13:33:41.000Z",
+                "2020-10-21T13:33:41.000Z",
+                "2020-10-21T13:33:41.000Z"
         );
         Mockito.when(mockTodoRepository.findById(id)).thenReturn(Optional.of(dbEntry));
         Mockito.when(mockTodoRepository.save(dbEntry)).thenReturn(dbEntry);
@@ -163,27 +196,36 @@ class TodoEntryServiceTest {
         assertEquals("Title B", result.getTitle());
         assertEquals("Description B", result.getDescription());
         assertEquals("2020-10-21T13:33:41.000Z", result.getCreatedAt());
-        assertFalse(result.getCompleted());
+        assertTrue(result.getCompleted());
+        assertEquals("2020-10-21T13:33:41.000Z",result.getDueOn());
+        assertEquals("2020-10-21T13:33:41.000Z",result.getLastModified());
+        assertEquals("2020-10-21T13:33:41.000Z",result.getCompletedOn());
     }
 
     @Test
     void testUpdateTodo_HappyPath_CreatedAtChanged() throws InvalidIdException {
         // Given
-        // the user calls with a changed title
+        // the user calls with a changed creation date
         long id = 1;
         TodoEntry changes = new TodoEntry(
                 null,
                 null,
                 null,
-                "2020-08-15T13:33:41.000Z",
+                "2020-12-15T13:33:41.000Z",
+                null,
+                null,
+                null,
                 null
         );
         TodoEntry dbEntry = new TodoEntry(
                 id,
                 "Title B",
                 "Description B",
+                "2020-12-15T13:33:41.000Z",
+                true,
                 "2020-10-21T13:33:41.000Z",
-                true
+                "2020-10-21T13:33:41.000Z",
+                "2020-10-21T13:33:41.000Z"
         );
         Mockito.when(mockTodoRepository.findById(id)).thenReturn(Optional.of(dbEntry));
         Mockito.when(mockTodoRepository.save(dbEntry)).thenReturn(dbEntry);
@@ -197,8 +239,140 @@ class TodoEntryServiceTest {
         assertEquals(id, result.getId());
         assertEquals("Title B", result.getTitle());
         assertEquals("Description B", result.getDescription());
-        assertEquals("2020-08-15T13:33:41.000Z", result.getCreatedAt());
+        assertEquals("2020-12-15T13:33:41.000Z", result.getCreatedAt());
         assertTrue(result.getCompleted());
+        assertEquals("2020-10-21T13:33:41.000Z",result.getDueOn());
+        assertEquals("2020-10-21T13:33:41.000Z",result.getLastModified());
+        assertEquals("2020-10-21T13:33:41.000Z",result.getCompletedOn());
+    }
+    @Test
+    void testUpdateTodo_HappyPath_DueOnChanged() throws InvalidIdException {
+        // Given
+        // the user calls with a changed title
+        long id = 1;
+        TodoEntry changes = new TodoEntry(
+                null,
+                null,
+                null,
+                null,
+                null,
+                "2020-10-21T13:33:41.000Z",
+                null,
+                null
+        );
+        TodoEntry dbEntry = new TodoEntry(
+                0L,
+                "Title B",
+                "Description B",
+                "2020-10-21T13:33:41.000Z",
+                true,
+                "2020-10-22T13:33:41.000Z",
+                "2020-10-21T13:33:41.000Z",
+                "2020-10-21T13:33:41.000Z"
+        );
+        Mockito.when(mockTodoRepository.findById(id)).thenReturn(Optional.of(dbEntry));
+        Mockito.when(mockTodoRepository.save(dbEntry)).thenReturn(dbEntry);
+
+        // When
+        // we call updateTodo on an entry with that changeset
+        TodoEntry result = this.testee.updateTodo(id, changes);
+
+        // Then
+        // The title should have changed, but nothing else
+        assertEquals(id, result.getId());
+        assertEquals("New Title", result.getTitle());
+        assertEquals("Description B", result.getDescription());
+        assertEquals("2020-10-21T13:33:41.000Z", result.getCreatedAt());
+        assertTrue(result.getCompleted());
+        assertEquals("2020-10-22T13:33:41.000Z",result.getDueOn());
+        assertEquals("2020-10-21T13:33:41.000Z",result.getLastModified());
+        assertEquals("2020-10-21T13:33:41.000Z",result.getCompletedOn());
+    }
+    @Test
+    void testUpdateTodo_HappyPath_LastModifiedChanged() throws InvalidIdException {
+        // Given
+        // the user calls with a changed title
+        long id = 1;
+        TodoEntry changes = new TodoEntry(
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                "2020-10-21T13:33:41.000Z",
+                null
+        );
+        TodoEntry dbEntry = new TodoEntry(
+                id,
+                "New Title",
+                "Description B",
+                "2020-10-21T13:33:41.000Z",
+                true,
+                "2020-10-21T13:33:41.000Z",
+                "2020-10-21T13:33:41.000Z",
+                "2020-10-21T13:33:41.000Z"
+        );
+        Mockito.when(mockTodoRepository.findById(id)).thenReturn(Optional.of(dbEntry));
+        Mockito.when(mockTodoRepository.save(dbEntry)).thenReturn(dbEntry);
+
+        // When
+        // we call updateTodo on an entry with that changeset
+        TodoEntry result = this.testee.updateTodo(id, changes);
+
+        // Then
+        // The title should have changed, but nothing else
+        assertEquals(id, result.getId());
+        assertEquals("New Title", result.getTitle());
+        assertEquals("Description B", result.getDescription());
+        assertEquals("2020-10-21T13:33:41.000Z", result.getCreatedAt());
+        assertTrue(result.getCompleted());
+        assertEquals("2020-10-21T13:33:41.000Z",result.getDueOn());
+        assertEquals("2020-10-21T13:33:41.000Z",result.getLastModified());
+        assertEquals("2020-10-21T13:33:41.000Z",result.getCompletedOn());
+    }
+    @Test
+    void testUpdateTodo_HappyPath_GetCompletedChanged() throws InvalidIdException {
+        // Given
+        // the user calls with a changed title
+        long id = 1;
+        TodoEntry changes = new TodoEntry(
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                "2020-10-21T13:33:41.000Z"
+        );
+        TodoEntry dbEntry = new TodoEntry(
+                id,
+                "New Title",
+                "Description B",
+                "2020-10-21T13:33:41.000Z",
+                true,
+                "2020-10-21T13:33:41.000Z",
+                "2020-10-21T13:33:41.000Z",
+                "2020-10-21T13:33:41.000Z"
+        );
+        Mockito.when(mockTodoRepository.findById(id)).thenReturn(Optional.of(dbEntry));
+        Mockito.when(mockTodoRepository.save(dbEntry)).thenReturn(dbEntry);
+
+        // When
+        // we call updateTodo on an entry with that changeset
+        TodoEntry result = this.testee.updateTodo(id, changes);
+
+        // Then
+        // The title should have changed, but nothing else
+        assertEquals(id, result.getId());
+        assertEquals("New Title", result.getTitle());
+        assertEquals("Description B", result.getDescription());
+        assertEquals("2020-10-21T13:33:41.000Z", result.getCreatedAt());
+        assertTrue(result.getCompleted());
+        assertEquals("2020-10-21T13:33:41.000Z",result.getDueOn());
+        assertEquals("2020-10-21T13:33:41.000Z",result.getLastModified());
+        assertEquals("2020-10-21T13:33:41.000Z",result.getCompletedOn());
     }
 
     @Test

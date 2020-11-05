@@ -1,27 +1,17 @@
-package main.java.com.xpanxion.todo.services;
+package com.xpanxion.todo.services;
 
 import com.xpanxion.todo.domain.TodoEntry;
-<<<<<<< HEAD
-import com.xpanxion.todo.repositories.TodoRepository;
-import com.xpanxion.todo.exceptions.InvalidExceptions;
-=======
 import com.xpanxion.todo.exceptions.InvalidDueOnException;
 import com.xpanxion.todo.exceptions.InvalidIdException;
 import com.xpanxion.todo.repositories.TodoRepository;
 import org.springframework.beans.InvalidPropertyException;
->>>>>>> faddadd... Updating DueOn error handling
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-=======
 import java.time.DateTimeException;
->>>>>>> faddadd... Updating DueOn error handling
 import java.time.Instant;
 import java.util.List;
->>>>>>> f51a29b... Updating completed and completedOn
 import java.util.Optional;
 
 @Service
@@ -29,11 +19,6 @@ public class TodoEntryService {
     @Autowired
     TodoRepository todoRepository;
 
-<<<<<<< HEAD
-    public enum UpdateResultType {
-        SUCCESSFUL,
-        INVALID_ID
-=======
     public List getTodos() throws InvalidIdException {
         // Decide how we want to sort our database results -- here we want to go by createdAt column in descending order
         Sort sortByCreatedAt = Sort.by(Sort.Direction.DESC, "createdAt");
@@ -62,23 +47,25 @@ public class TodoEntryService {
         newEntry.setDueOn(Instant.EPOCH.toString());
         newEntry.setLastModified(Instant.EPOCH.toString());
         newEntry.setCompletedOn(Instant.EPOCH.toString());
->>>>>>> c1b5e80... Updating createdAt, dueOn, lastModified, and completedOn for ToDo
     }
 
-<<<<<<< HEAD
-    interface UpdateResult {}
-    class SuccessfulUpdateResult implements UpdateResult {
-=======
     public TodoEntry getTodo(long id) throws InvalidIdException {
         // Get our to-do entry from the database
         Optional<TodoEntry> originalEntry = todoRepository.findById(id);
->>>>>>> faddadd... Updating DueOn error handling
 
+        // Check if we found an entry
+        if (originalEntry.isPresent()) {
+            // Use the entry's data
+            TodoEntry entryData = originalEntry.get();
+
+            // get the todo
+            return entryData;
+        } else {
+            // Throwing an invalid ID exception as the ID could not e found in the database
+            throw new InvalidIdException();
+        }
     }
 
-<<<<<<< HEAD
-    class InvalidResult implements UpdateResult {
-=======
     public void deleteTodo(long id) throws InvalidIdException {
         Optional<TodoEntry> originalEntry = todoRepository.findById(id);
 
@@ -92,7 +79,6 @@ public class TodoEntryService {
             throw new InvalidIdException();
 
         }
->>>>>>> faddadd... Updating DueOn error handling
 
     }
 
