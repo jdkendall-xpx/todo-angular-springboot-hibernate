@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
@@ -76,50 +77,55 @@ public class TodoEntryService {
 
             entryData.setTitle(changes.getTitle());
 
+            //update when last modified
+            lastModifiedAt(entryData,changes);
         }
         if (changes.getDescription() != null) {
 
             entryData.setDescription(changes.getDescription());
 
 
+            //update when last modified
+            lastModifiedAt(entryData,changes);
+
         }
+        //get created at
         if (changes.getCreatedAt() != null) {
 
             entryData.setCreatedAt(changes.getCreatedAt());
 
 
-        }
-
-        if (changes.getDueOn() != null) {
-
-            entryData.setDueOn(changes.getDueOn());
-
 
         }
-        if (changes.getCompletedOn() != null) {
-
-            entryData.setCompletedOn(changes.getCompletedOn());
-            //completed on date if todo is completed
-//            if(changes.getCompletedOn == true){
-//
-//            }
-//            else(changes.getCompletedOn ==false){
-//
-//            }
-
-        }
-        if (changes.getLastModifiedAt() != null) {
-
-            entryData.setLastModifiedAt(changes.getLastModifiedAt());
 
 
-        }
+
         if (changes.getCompleted() != null) {
 
             entryData.setCompleted(changes.getCompleted());
+            //completed on date if todo is completed
+            if(changes.getCompleted() == true){
+               entryData.setCompletedOn(Instant.now().toString());
 
+
+                //update when last modified
+                lastModifiedAt(entryData,changes);
+
+            }
+            else{
+                entryData.setCompletedOn("Task not complete");
+
+
+                //update when last modified
+                lastModifiedAt(entryData,changes);
+
+            }
 
         }
+    }
+    public void lastModifiedAt(TodoEntry entryData, TodoEntry changes){
+        changes.setLastModifiedAt(Instant.now().toString());
+        entryData.setLastModifiedAt(changes.getLastModifiedAt());
     }
 
     //delete service method
