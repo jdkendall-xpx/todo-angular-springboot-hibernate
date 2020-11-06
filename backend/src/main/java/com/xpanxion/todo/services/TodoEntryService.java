@@ -85,16 +85,30 @@ public class TodoEntryService {
         }
         if(changes.getCompleted().isPresent()) {
             entryData.setCompleted(changes.getCompleted().get());
+            System.out.println(changes.getCompleted().get());
+
+            //suppose to automatically give a completed on date if task is complete(true)  and send a "not complete" entry if task is not complete(false)
+
+//            if(changes.getCompleted().isPresent() && changes.getCompleted().get() == true){
+//                entryData.setCompletedOn(Instant.now().toString());
+//
+//            }else if (changes.getCompleted().isPresent() && changes.getCompleted().get() == false){
+//                entryData.setCompletedOn("Not complete");
+//            }
         }
         if(changes.getCreatedAt().isPresent()) {
             entryData.setCreatedAt(changes.getCreatedAt().get());
+
         }
+
         if(changes.getDueOn().isPresent()) {
             entryData.setDueOn(changes.getDueOn().get());
         }
         if(changes.getCompletedOn().isPresent()) {
-            entryData.setCompletedOn(changes.getCompletedOn().get());
+            entryData.setCreatedAt(changes.getCompletedOn().get());
+
         }
+
         if(changes.getLastModifiedAt().isPresent()) {
             entryData.setLastModifiedAt(changes.getLastModifiedAt().get());
         }
