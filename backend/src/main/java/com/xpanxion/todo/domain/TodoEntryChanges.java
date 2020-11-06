@@ -1,9 +1,8 @@
 package com.xpanxion.todo.domain;
 
-import javax.persistence.Entity;
 import java.util.Optional;
 
-@Entity
+
 public class TodoEntryChanges {
 
     private final long id;
@@ -21,6 +20,17 @@ public class TodoEntryChanges {
         this.title = title;
         this.description = description;
         this.createdAt = dateCreated;
+        this.completed = completed;
+    }
+
+    public TodoEntryChanges( long id,Optional<String> title, Optional<String> description, Optional<String> dateCreated,Optional<String> dueOn,Optional<String> completedOn,Optional<String> lastModifiedAt,Optional<Boolean> completed) {
+        this.id = id;
+        this.title = title;
+        this.description = description;
+        this.createdAt = dateCreated;
+        this.dueOn = dueOn;
+        this.completedOn = completedOn;
+        this.lastModifiedAt = lastModifiedAt;
         this.completed = completed;
     }
 

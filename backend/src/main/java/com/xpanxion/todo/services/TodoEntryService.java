@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
@@ -82,7 +83,6 @@ public class TodoEntryService {
 
                 entryData.setDescription(changes.getDescription().get());
                 //modify date after entries are made
-                //getLastModifiedDate(entryData,changes);
 
             }
             if (changes.getCreatedAt().isPresent()) {
@@ -92,7 +92,9 @@ public class TodoEntryService {
                 //getLastModifiedDate(entryData,changes);
 
             }
-//            if (changes.getDueOn().isPresent()) {
+            if (changes.getDueOn().isPresent()) {
+                entryData.setDueOn(changes.getDueOn().get());
+
 //                try {
 //                    Instant dueOnDate = Instant.parse(changes.getDueOn().get());
 //                    Instant createAtDate = Instant.parse(entryData.getCreatedAt());
@@ -112,47 +114,45 @@ public class TodoEntryService {
 //                        throw new RuntimeException("Due date cannot be parsed");
 //                    }
 //
-//
-//
-//            }
+
+
+            }
 
 
             if (changes.getCompleted().isPresent()) {
 
                 entryData.setCompleted(changes.getCompleted().get());
                 //modify date after entries are made
-//                getLastModifiedDate(entryData,changes);
-//
-//                //change completed on date
-//                if(changes.getCompleted() == true) {
-//                    //the database should be updated with a completed at date
-//                    entryData.setCompletedOn(Instant.now().toString());
-//                    //modify date after entries are made
-//                    getLastModifiedDate(entryData,changes);
-//                }
-                // If a todo is marked incomplete,
-//                else {
-////                    // the database should be updated with no completed at date
-//                    entryData.setCompletedOn("Not complete");
-//                }
-//
-//
-//
-//            }
+
+                //change completed on date if task if completed
+                if(changes.getCompleted().isPresent()) {
+                    //the database should be updated with a completed at date
+                    entryData.setCompletedOn(Instant.now().toString());
+
+                }
+                //if a todo is marked incomplete,
+                else {
+//                    // the database should be updated with no completed at date
+                    entryData.setCompletedOn("Task is not complete");
+                }
+
+
+
+            }
 
 
 
         }
 
         //update last modified date after a change is made
-//    private void getLastModifiedDate(TodoEntry entryData, TodoEntry changes){
+//   private void getLastModifiedDate(TodoEntry entryData, TodoEntryChanges changes){
 //        changes.setLastModifiedAt(Instant.now().toString());
 //        entryData.setLastModifiedAt(changes.getLastModifiedAt());
 //
 //
 //
 //
-   }
+//   }
 //
 
     //delete service method
