@@ -29,10 +29,13 @@ public class TodoEntry {
 
     private Boolean completed;
 
+    @Column(length = 24)
+    private String lastModifiedAt;
+
     public TodoEntry() {
     }
 
-    public TodoEntry(Long id, String title, String description, String dateCreated, String dateDue, String completedOn, Boolean completed) {
+    public TodoEntry(Long id, String title, String description, String dateCreated, String dateDue, String completedOn, Boolean completed, String lastModified) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -40,6 +43,7 @@ public class TodoEntry {
         this.dueOn = dateDue;
         this.completedAt = completedOn;
         this.completed = completed;
+        this.lastModifiedAt = lastModified;
     }
 
     public Long getId() {
@@ -89,4 +93,8 @@ public class TodoEntry {
     public void setCompleted(Boolean completed) {
         this.completed = completed;
     }
+
+    public String getLastModifiedAt() { return lastModifiedAt; }
+
+    public void setLastModifiedAt(String lastModified) { this.lastModifiedAt = lastModified; }
 }

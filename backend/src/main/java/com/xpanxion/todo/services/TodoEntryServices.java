@@ -4,11 +4,14 @@ import com.xpanxion.todo.domain.TodoEntry;
 import com.xpanxion.todo.exceptions.InvalidException;
 import com.xpanxion.todo.repositories.TodoRepository;
 import jdk.nashorn.internal.objects.NativeDate;
+import jdk.nashorn.internal.objects.NativeMath;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.time.DateTimeException;
+import java.time.Instant;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -20,7 +23,8 @@ public class TodoEntryServices {
     TodoRepository todoRepository;
     SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 
-    Date date= new Date();
+    Date date = new Date();
+
     public List getTodos() {
         Sort sortByCreatedAt = Sort.by(Sort.Direction.DESC, "createdAt");
 
@@ -74,44 +78,67 @@ public class TodoEntryServices {
             throw new com.xpanxion.todo.exceptions.InvalidException();
         }
     }
-    private void updateEntry (TodoEntry entryData, TodoEntry changes){
-        if (changes.getTitle() != null) {
 
-            entryData.setTitle(changes.getTitle());
+    private void updateEntry(TodoEntry entryData, TodoEntry changes) {
+        boolean changedTitle = false;
+        // Update the entry
+        if (changes.getTitle() != null) {
+              entryData.setTitle(changes.getTitle());
+              changedTitle = true;
+              //change modified date
+              changeLastModifiedAtDate(entryData,changes);
 
         }
         if (changes.getDescription() != null) {
-
-            entryData.setDescription(changes.getDescription());
+              entryData.setDescription(changes.getDescription());
+              //change modified date
+            changeLastModifiedAtDate(entryData,changes);
 
 
         }
         if (changes.getDueOn() != null) {
+            try {
+                Instant dueOnDate = Instant.parse(changes.getDueOn());
+                Instant createAtDate = Instant.parse(entryData.getCreatedAt());
 
-            entryData.setDueOn(changes.getDueOn());
+                if (dueOnDate.isAfter(createAtDate)) {
+                    Instant currentDate = Instant.now();
+                    String currentDateString = currentDate.toString();
+
+                    entryData.setDueOn(currentDateString);
+                    //modify date after entries are made
+                    //change modified date
+                    changeLastModifiedAtDate(entryData,changes);
+                }else{
+                    throw new InvalidDueOnException("Due date was before created on date");
+                }
+
+            }catch(DateTimeException ex){
+                throw new RuntimeException("Due date cannot be parsed");
+            }
 
 
         }
         if (changes.getCreatedAt() != null) {
-
-            entryData.setCreatedAt(changes.getCreatedAt());
+              entryData.setCreatedAt(changes.getCreatedAt());
 
 
         }
         if (changes.getCompletedOn() != null) {
-
-            entryData.setCompletedOn(changes.getCompletedOn());
+              entryData.setCompletedOn(changes.getCompletedOn());
+              //change modified date
+            changLastModifiedAtDate(entryData,changes);
 
 
         }
         if (changes.getCompleted() != null) {
-
-            entryData.setCompleted(changes.getCompleted());
-
+              entryData.setCompleted(changes.getCompleted());
+            changLastModifiedAtDate(entryData,changes);
+        System.out.println("Did we change title? " + (changedTitle ? "Yes" : "No"));
             // If a todo is marked complete,
-            if(changes.getCompleted() == true) {
+            if (changes.getCompleted() == true) {
                 // the database should be updated with a completed at date
-                entryData.setCompletedOn(event.toISOString());
+                entryData.getCompleted();
             }
             // If a todo is marked incomplete,
             else {
@@ -121,7 +148,11 @@ public class TodoEntryServices {
 
         }
     }
-    public void deleteTodo ( long id) throws com.xpanxion.todo.exceptions.InvalidException {
+
+
+
+
+    public void deleteTodo(long id) throws com.xpanxion.todo.exceptions.InvalidException {
         Optional<TodoEntry> originalEntry = todoRepository.findById(id);
 
 // Check if we found an entry
@@ -137,5 +168,6 @@ public class TodoEntryServices {
             throw new com.xpanxion.todo.exceptions.InvalidException();
         }
 
-    }}
+    }
+}
 
