@@ -1,6 +1,7 @@
 package com.xpanxion.todo.services;
 
 import com.xpanxion.todo.domain.TodoEntry;
+import com.xpanxion.todo.domain.TodoEntryChanges;
 import com.xpanxion.todo.exceptions.InvalidException;
 import com.xpanxion.todo.repositories.TodoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,76 +52,51 @@ public class TodoEntryService {
     }
     //update service method
 
-    public TodoEntry updateTodo ( long id, TodoEntry changes) throws InvalidException {
-        Optional<TodoEntry> originalEntry = this.todoRepository.findById(id);
+    public TodoEntry updateTodo(TodoEntryChanges entryChanges) throws InvalidException {
+
+        // Get our to-do entry from the database
+        Optional<TodoEntry> originalEntry = this.todoRepository.findById(entryChanges.getId());
 
         // Check if we found an entry
         if (originalEntry.isPresent()) {
             // Use the entry's data
             TodoEntry entryData = originalEntry.get();
 
-            // Update the entry
-            this.updateEntry(entryData, changes);
+            this.updateEntry(entryData, entryChanges);
+
             // Save the updated version to the database
             TodoEntry updatedTodo = this.todoRepository.save(entryData);
 
             // Return the updated full entry
             return updatedTodo;
         } else {
-            // throwing invalid id exception
+            // Throwing an invalid ID exception as the ID could not be found in the database
             throw new InvalidException();
         }
     }
 
-    private void updateEntry (TodoEntry entryData, TodoEntry changes){
-        if (changes.getTitle() != null) {
-
-            entryData.setTitle(changes.getTitle());
-
-            //update when last modified
-            lastModifiedAt(entryData,changes);
+    private void updateEntry(TodoEntry entryData, TodoEntryChanges changes) {
+        // Update the entry
+        if(changes.getTitle().isPresent()) {
+            entryData.setTitle(changes.getTitle().get());
         }
-        if (changes.getDescription() != null) {
-
-            entryData.setDescription(changes.getDescription());
-
-
-            //update when last modified
-            lastModifiedAt(entryData,changes);
-
+        if(changes.getDescription().isPresent()) {
+            entryData.setDescription(changes.getDescription().get());
         }
-        //get created at
-        if (changes.getCreatedAt() != null) {
-
-            entryData.setCreatedAt(changes.getCreatedAt());
-
-
-
+        if(changes.getCompleted().isPresent()) {
+            entryData.setCompleted(changes.getCompleted().get());
         }
-
-
-
-        if (changes.getCompleted() != null) {
-
-            entryData.setCompleted(changes.getCompleted());
-            //completed on date if todo is completed
-            if(changes.getCompleted() == true){
-               entryData.setCompletedOn(Instant.now().toString());
-
-
-                //update when last modified
-                lastModifiedAt(entryData,changes);
-
-            }
-            else{
-                entryData.setCompletedOn("Task not complete");
-
-
-                //update when last modified
-                lastModifiedAt(entryData,changes);
-
-            }
-
+        if(changes.getCreatedAt().isPresent()) {
+            entryData.setCreatedAt(changes.getCreatedAt().get());
+        }
+        if(changes.getDueOn().isPresent()) {
+            entryData.setDueOn(changes.getDueOn().get());
+        }
+        if(changes.getCompletedOn().isPresent()) {
+            entryData.setCompletedOn(changes.getCompletedOn().get());
+        }
+        if(changes.getLastModifiedAt().isPresent()) {
+            entryData.setLastModifiedAt(changes.getLastModifiedAt().get());
         }
     }
     public void lastModifiedAt(TodoEntry entryData, TodoEntry changes){

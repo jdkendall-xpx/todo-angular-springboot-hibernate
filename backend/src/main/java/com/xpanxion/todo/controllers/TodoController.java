@@ -1,9 +1,12 @@
 package com.xpanxion.todo.controllers;
 
 import com.xpanxion.todo.domain.TodoEntry;
+import com.xpanxion.todo.domain.TodoEntryChanges;
+import com.xpanxion.todo.exceptions.ModifyTodoValidationException;
 import com.xpanxion.todo.repositories.TodoRepository;
 import com.xpanxion.todo.exceptions.InvalidException;
 import com.xpanxion.todo.services.TodoEntryService;
+import com.xpanxion.todo.validators.ModifyTodoValidation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +19,8 @@ import java.util.List;
 public class TodoController {
     @Autowired
     TodoRepository todoRepository;
+    @Autowired
+    ModifyTodoValidation modifyTodoValidation;
     @Autowired
     TodoEntryService todoEntryService;
 
@@ -55,18 +60,19 @@ public class TodoController {
     }
 
     @PutMapping(value = "/todos/{id}")
-    public ResponseEntity<TodoEntry> updateTodo(@PathVariable("id") String idString, @RequestBody TodoEntry todo) {
+    public ResponseEntity<TodoEntry> updateTodo(@PathVariable("id") String idString, @RequestBody TodoEntry todoChanges) {
         try {
-            // Turn our string into an ID number
-            long id = Long.parseLong(idString);
+            TodoEntryChanges validatedChanges = this.modifyTodoValidation.validate(idString, todoChanges);
 
-            TodoEntry result = this.todoEntryService.updateTodo(id, todo);
+            TodoEntry result = this.todoEntryService.updateTodo(validatedChanges);
+
             return ResponseEntity.ok().body(result);
-        } catch (NumberFormatException ex) {
-            // Return a 400 Bad Request response, we did not pass a number as an ID
+        } catch(ModifyTodoValidationException ex) {
+            // Return a 400 Bad Request response, we did not pass validation
+            System.out.println(ex.getMessage());
             return ResponseEntity.badRequest().build();
         } catch (InvalidException ex) {
-            //return a 404 not found response, did not find a valid entry for id
+            // Return a 404 Not Found response, we did not find a valid entry for the ID
             return ResponseEntity.notFound().build();
         }
     }
