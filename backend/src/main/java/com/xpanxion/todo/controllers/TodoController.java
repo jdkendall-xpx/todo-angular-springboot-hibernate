@@ -1,9 +1,12 @@
 package com.xpanxion.todo.controllers;
 
 import com.xpanxion.todo.domain.TodoEntry;
+import com.xpanxion.todo.domain.TodoEntryChanges;
 import com.xpanxion.todo.exceptions.InvalidIdException;
+import com.xpanxion.todo.exceptions.ModifyTodoValidatorException;
 import com.xpanxion.todo.repositories.TodoRepository;
 import com.xpanxion.todo.services.TodoEntryService;
+import com.xpanxion.todo.validators.ModifyTodoValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +22,9 @@ public class TodoController {
 
     @Autowired
     TodoEntryService todoEntryService;
+
+    @Autowired
+    ModifyTodoValidator modifyTodoValidator;
 
     @GetMapping("/todos")
     public ResponseEntity<List<TodoEntry>> getAllTodos() {
@@ -63,14 +69,14 @@ public class TodoController {
     @PutMapping(value = "/todos/{id}")
     public ResponseEntity<Object> updateTodo(@PathVariable("id") String idString, @RequestBody TodoEntry todoChanges) {
         try {
-            // Turn our string into an ID number
-            long id = Long.parseLong(idString);
+            TodoEntryChanges validatedChanges = this.modifyTodoValidator.validate(idString, todoChanges);
 
-            TodoEntry result = this.todoEntryService.updateTodo(id, todoChanges);
+            TodoEntry result = this.todoEntryService.updateTodo(validatedChanges);
 
             return ResponseEntity.ok().body(result);
-        } catch (NumberFormatException ex) {
-            // Return a 400 Bad Request response, we did not pass a number as an ID
+
+        } catch (ModifyTodoValidatorException ex) {
+            System.out.println(ex.getMessage());
             return ResponseEntity.badRequest().build();
         } catch(InvalidIdException ex) {
             //return a 404 not Found response, we did not find a valid entry for the ID

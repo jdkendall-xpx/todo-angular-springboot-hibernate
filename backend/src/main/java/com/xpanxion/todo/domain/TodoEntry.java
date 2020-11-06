@@ -35,6 +35,15 @@ public class TodoEntry {
     public TodoEntry() {
     }
 
+    public TodoEntry(Long id, String title, String description, String dateCreated,String dueOn) {
+        this.id = id;
+        this.title = title;
+        this.description = description;
+        this.createdAt = dateCreated;
+        this.dueOn = dueOn;
+
+    }
+
     public TodoEntry(Long id, String title, String description, String dateCreated,
                      Boolean completed, String dueOn, String lastModified, String completedOn) {
         this.id = id;

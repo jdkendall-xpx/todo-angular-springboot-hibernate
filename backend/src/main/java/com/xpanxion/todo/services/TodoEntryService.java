@@ -1,6 +1,7 @@
 package com.xpanxion.todo.services;
 
 import com.xpanxion.todo.domain.TodoEntry;
+import com.xpanxion.todo.domain.TodoEntryChanges;
 import com.xpanxion.todo.exceptions.InvalidDueOnException;
 import com.xpanxion.todo.exceptions.InvalidIdException;
 import com.xpanxion.todo.repositories.TodoRepository;
@@ -82,9 +83,9 @@ public class TodoEntryService {
 
     }
 
-    public TodoEntry updateTodo(long id, TodoEntry changes) throws InvalidIdException {
+    public TodoEntry updateTodo(TodoEntryChanges entryChanges) throws InvalidIdException {
         // Get our to-do entry from the database
-        Optional<TodoEntry> originalEntry = this.todoRepository.findById(id);
+        Optional<TodoEntry> originalEntry = this.todoRepository.findById(entryChanges.getId());
 
         // Check if we found an entry
         if (originalEntry.isPresent()) {
@@ -92,7 +93,7 @@ public class TodoEntryService {
             TodoEntry entryData = originalEntry.get();
 
             // Update the entry
-            this.updateEntry(entryData, changes);
+            this.updateEntry(entryData, entryChanges);
 
             // Save the updated version to the database
             TodoEntry updatedTodo = this.todoRepository.save(entryData);
@@ -106,16 +107,16 @@ public class TodoEntryService {
 
     }
 
-    private void updateEntry(TodoEntry entryData, TodoEntry changes) throws InvalidPropertyException {
+    private void updateEntry(TodoEntry entryData, TodoEntryChanges changes) throws InvalidPropertyException {
         boolean hasBeenModified = false;
 
         //update the entry
         if (changes.getTitle() != null) {
-            entryData.setTitle(changes.getTitle());
+            entryData.setTitle(changes.getTitle().get());
             hasBeenModified = true;
         }
         if (changes.getDescription() != null) {
-            entryData.setDescription(changes.getDescription());
+            entryData.setDescription(changes.getDescription().get());
             hasBeenModified = true;
         }
         if (changes.getCreatedAt() != null) {
@@ -129,7 +130,7 @@ public class TodoEntryService {
         }
         if (changes.getDueOn() != null) {
             try {
-                Instant dueOnDate = Instant.parse(changes.getDueOn());
+                Instant dueOnDate = Instant.parse(changes.getDueOn().get());
                 Instant createdAtDate = Instant.parse(entryData.getCreatedAt());
 
                 if (dueOnDate.isAfter(createdAtDate)) {
@@ -151,7 +152,7 @@ public class TodoEntryService {
             Instant currentDate = Instant.now();
             String currentDateString = currentDate.toString();
 
-            Boolean isComplete = changes.getCompleted();
+            Boolean isComplete = changes.getCompleted().get();
 
             entryData.setCompleted(isComplete);
 
