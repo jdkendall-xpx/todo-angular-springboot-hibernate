@@ -1,14 +1,12 @@
 package com.xpanxion.todo.services;
 
 import com.xpanxion.todo.domain.TodoEntry;
-import com.xpanxion.todo.exceptions.InvalidDueOnException;
+import com.xpanxion.todo.domain.TodoEntryChanges;
 import com.xpanxion.todo.repositories.TodoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.time.DateTimeException;
-import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
@@ -52,8 +50,8 @@ public class TodoEntryService {
     }
         //update service method
 
-        public TodoEntry updateTodo ( long id, TodoEntry changes) throws com.xpanxion.todo.exceptions.InvalidException {
-            Optional<TodoEntry> originalEntry = this.todoRepository.findById(id);
+        public TodoEntry updateTodo ( TodoEntryChanges entryChanges) throws com.xpanxion.todo.exceptions.InvalidException {
+            Optional<TodoEntry> originalEntry = this.todoRepository.findById(entryChanges.getId());
 
             // Check if we found an entry
             if (originalEntry.isPresent()) {
@@ -61,7 +59,7 @@ public class TodoEntryService {
                 TodoEntry entryData = originalEntry.get();
 
                 // Update the entry
-                this.updateEntry(entryData, changes);
+                this.updateEntry(entryData, entryChanges);
                 // Save the updated version to the database
                 TodoEntry updatedTodo = this.todoRepository.save(entryData);
 
@@ -73,89 +71,89 @@ public class TodoEntryService {
             }
         }
 
-        private void updateEntry (TodoEntry entryData, TodoEntry changes){
-            if (changes.getTitle() != null) {
+        private void updateEntry (TodoEntry entryData, TodoEntryChanges changes){
+            if (changes.getTitle().isPresent()) {
 
-                entryData.setTitle(changes.getTitle());
+                entryData.setTitle(changes.getTitle().get());
                 //modify date after entries are made
-                getLastModifiedDate(entryData,changes);
+                //getLastModifiedDate(entryData,changes);
             }
-            if (changes.getDescription() != null) {
+            if (changes.getDescription().isPresent()) {
 
-                entryData.setDescription(changes.getDescription());
+                entryData.setDescription(changes.getDescription().get());
                 //modify date after entries are made
-                getLastModifiedDate(entryData,changes);
-
-            }
-            if (changes.getCreatedAt() != null) {
-
-                entryData.setCreatedAt(changes.getCreatedAt());
-                //modify date after entries are made
-                getLastModifiedDate(entryData,changes);
+                //getLastModifiedDate(entryData,changes);
 
             }
-            if (changes.getDueOn() != null) {
-                try {
-                    Instant dueOnDate = Instant.parse(changes.getDueOn());
-                    Instant createAtDate = Instant.parse(entryData.getCreatedAt());
+            if (changes.getCreatedAt().isPresent()) {
 
-                    if (dueOnDate.isAfter(createAtDate)) {
-                        Instant currentDate = Instant.now();
-                        String currentDateString = currentDate.toString();
-
-                        entryData.setDueOn(currentDateString);
-                        //modify date after entries are made
-                        getLastModifiedDate(entryData,changes);
-                    }else{
-                        throw new InvalidDueOnException("Due date was before created on date");
-                    }
-
-                }catch(DateTimeException ex){
-                        throw new RuntimeException("Due date cannot be parsed");
-                    }
-
-
+                entryData.setCreatedAt(changes.getCreatedAt().get());
+                //modify date after entries are made
+                //getLastModifiedDate(entryData,changes);
 
             }
+//            if (changes.getDueOn().isPresent()) {
+//                try {
+//                    Instant dueOnDate = Instant.parse(changes.getDueOn().get());
+//                    Instant createAtDate = Instant.parse(entryData.getCreatedAt());
+//
+//                    if (dueOnDate.isAfter(createAtDate)) {
+//                        Instant currentDate = Instant.now();
+//                        String currentDateString = currentDate.toString();
+//
+//                        entryData.setDueOn(currentDateString);
+//                        //modify date after entries are made
+//                        getLastModifiedDate(entryData,changes);
+//                    }else{
+//                        throw new InvalidDueOnException("Due date was before created on date");
+//                    }
+//
+//                }catch(DateTimeException ex){
+//                        throw new RuntimeException("Due date cannot be parsed");
+//                    }
+//
+//
+//
+//            }
 
 
-            if (changes.getCompleted() != null) {
+            if (changes.getCompleted().isPresent()) {
 
-                entryData.setCompleted(changes.getCompleted());
+                entryData.setCompleted(changes.getCompleted().get());
                 //modify date after entries are made
-                getLastModifiedDate(entryData,changes);
-
-                //change completed on date
-                if(changes.getCompleted() == true) {
-                    //the database should be updated with a completed at date
-                    entryData.setCompletedOn(Instant.now().toString());
-                    //modify date after entries are made
-                    getLastModifiedDate(entryData,changes);
-                }
+//                getLastModifiedDate(entryData,changes);
+//
+//                //change completed on date
+//                if(changes.getCompleted() == true) {
+//                    //the database should be updated with a completed at date
+//                    entryData.setCompletedOn(Instant.now().toString());
+//                    //modify date after entries are made
+//                    getLastModifiedDate(entryData,changes);
+//                }
                 // If a todo is marked incomplete,
-                else {
-//                    // the database should be updated with no completed at date
-                    entryData.setCompletedOn("Not complete");
-                }
-
-
-
-            }
+//                else {
+////                    // the database should be updated with no completed at date
+//                    entryData.setCompletedOn("Not complete");
+//                }
+//
+//
+//
+//            }
 
 
 
         }
 
         //update last modified date after a change is made
-    private void getLastModifiedDate(TodoEntry entryData, TodoEntry changes){
-        changes.setLastModifiedAt(Instant.now().toString());
-        entryData.setLastModifiedAt(changes.getLastModifiedAt());
-
-
-
-
-    }
-
+//    private void getLastModifiedDate(TodoEntry entryData, TodoEntry changes){
+//        changes.setLastModifiedAt(Instant.now().toString());
+//        entryData.setLastModifiedAt(changes.getLastModifiedAt());
+//
+//
+//
+//
+   }
+//
 
     //delete service method
 
