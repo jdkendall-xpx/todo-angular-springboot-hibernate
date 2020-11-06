@@ -2,11 +2,13 @@ package com.xpanxion.todo.services;
 
 import com.xpanxion.todo.domain.TodoEntry;
 import com.xpanxion.todo.domain.TodoEntryChanges;
+import com.xpanxion.todo.exceptions.InvalidDueOnException;
 import com.xpanxion.todo.repositories.TodoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.time.DateTimeException;
 import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
@@ -77,43 +79,44 @@ public class TodoEntryService {
 
                 entryData.setTitle(changes.getTitle().get());
                 //modify date after entries are made
-                //getLastModifiedDate(entryData,changes);
             }
+
             if (changes.getDescription().isPresent()) {
 
                 entryData.setDescription(changes.getDescription().get());
                 //modify date after entries are made
-
             }
+
             if (changes.getCreatedAt().isPresent()) {
 
                 entryData.setCreatedAt(changes.getCreatedAt().get());
                 //modify date after entries are made
-                //getLastModifiedDate(entryData,changes);
 
             }
+
             if (changes.getDueOn().isPresent()) {
                 entryData.setDueOn(changes.getDueOn().get());
 
-//                try {
-//                    Instant dueOnDate = Instant.parse(changes.getDueOn().get());
-//                    Instant createAtDate = Instant.parse(entryData.getCreatedAt());
-//
-//                    if (dueOnDate.isAfter(createAtDate)) {
-//                        Instant currentDate = Instant.now();
-//                        String currentDateString = currentDate.toString();
-//
-//                        entryData.setDueOn(currentDateString);
-//                        //modify date after entries are made
-//                        getLastModifiedDate(entryData,changes);
-//                    }else{
-//                        throw new InvalidDueOnException("Due date was before created on date");
-//                    }
-//
-//                }catch(DateTimeException ex){
-//                        throw new RuntimeException("Due date cannot be parsed");
-//                    }
-//
+                //confirm that due on date isnt before created at date
+                try {
+                    Instant dueOnDate = Instant.parse(changes.getDueOn().get());
+                    Instant createAtDate = Instant.parse(entryData.getCreatedAt());
+
+                    if (dueOnDate.isAfter(createAtDate)) {
+                        Instant currentDate = Instant.now();
+                        String currentDateString = currentDate.toString();
+
+                        entryData.setDueOn(currentDateString);
+                        //modify date after entries are made
+
+                    }else{
+                        throw new InvalidDueOnException("Due date was before created on date");
+                    }
+
+                }catch(DateTimeException ex){
+                        throw new RuntimeException("Due date cannot be parsed");
+                    }
+
 
 
             }
@@ -124,16 +127,17 @@ public class TodoEntryService {
                 entryData.setCompleted(changes.getCompleted().get());
                 //modify date after entries are made
 
-                //change completed on date if task if completed
-                if(changes.getCompleted().isPresent()) {
+                //if a todo is marked complete, the completed on date should be have the date it was completed on
+                if(changes.getCompleted().isPresent() == true && changes.getCompleted().get() ==true) {
                     //the database should be updated with a completed at date
                     entryData.setCompletedOn(Instant.now().toString());
-
+                    //modify date after entries are made
                 }
-                //if a todo is marked incomplete,
-                else {
+                //if a todo is marked incomplete, the completed on date should be defined as incomplete
+                else if(changes.getCompleted().isPresent() == true && changes.getCompleted().get() == false) {
 //                    // the database should be updated with no completed at date
                     entryData.setCompletedOn("Task is not complete");
+                    //modify date after entries are made
                 }
 
 
@@ -144,16 +148,16 @@ public class TodoEntryService {
 
         }
 
-        //update last modified date after a change is made
-//   private void getLastModifiedDate(TodoEntry entryData, TodoEntryChanges changes){
-//        changes.setLastModifiedAt(Instant.now().toString());
-//        entryData.setLastModifiedAt(changes.getLastModifiedAt());
-//
-//
-//
-//
-//   }
-//
+        //update last modified date after any change is made
+   private void getLastModifiedDate(TodoEntry entryData, TodoEntryChanges changes){
+       entryData.setLastModifiedAt(changes.getLastModifiedAt().get());
+       changes.setLastModifiedAt(Optional.of(Instant.now().toString()));
+
+
+
+
+   }
+
 
     //delete service method
 
