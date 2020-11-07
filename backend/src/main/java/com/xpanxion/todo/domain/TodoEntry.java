@@ -38,6 +38,14 @@ public class TodoEntry {
     public TodoEntry() {
 
     }
+    public TodoEntry(Long id, String title, String description, String dateCreated, Boolean completed) {
+        this.id = id;
+        this.title = title;
+        this.description = description;
+        this.createdAt = dateCreated;
+        this.completed = completed;
+
+    }
 
 
     public TodoEntry(Long id, String title, String description, String dateCreated, Boolean completed, String dateDue, String dateCompleted, String lastModified) {

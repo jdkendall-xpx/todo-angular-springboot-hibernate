@@ -28,12 +28,13 @@ class TodoEntryServiceTest {
         // the user calls with no changes to be made
         long id = 1;
         TodoEntry changes = new TodoEntry(
-        null,
-        null,
-        null,
-        null,
-        null
+                null,
+                null,
+                null,
+                null,
+                null
         );
+
         TodoEntry dbEntry = new TodoEntry(
             id,
             "Title B",
