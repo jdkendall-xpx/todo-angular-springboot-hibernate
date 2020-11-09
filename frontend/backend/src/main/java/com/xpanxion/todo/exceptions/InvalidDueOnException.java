@@ -1,11 +1,11 @@
 package com.xpanxion.todo.exceptions;
 
 public class InvalidDueOnException extends RuntimeException {
-    String message;
-
-    public InvalidDueOnException(String message){
+    public InvalidDueOnException(String message) {
         this.message = message;
+
     }
+    private String message;
 
     @Override
     public String getMessage() {

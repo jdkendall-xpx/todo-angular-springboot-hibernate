@@ -46,31 +46,32 @@ interface ApiTodoEntry {
   description: string;
   createdAt: string;
   completed: boolean;
-  lastModifiedAt?: string;
+  lastModified?: string;
   completedOn?: string;
   dueOn?: string;
 }
 
 const MAPPINGS = {
   TODO_ENTRY: {
+  //e = server value
     toDomain: (e: ApiTodoEntry): TodoEntry => {
       return {
         ...e,
-        createdAt: new Date(e.createdAt),
-        lastModifiedAt: e.lastModifiedAt ? new Date(e.lastModifiedAt) : undefined,
-        completedOn: e.completedOn ? new Date(e.completedOn) : undefined,
-        dueOn: e.dueOn ? new Date(e.dueOn) : undefined,
+       createdAt: e.createdAt ? new Date(e.createdAt) : undefined,
+       lastModified: e.lastModified ? new Date(e.lastModified) : undefined,
+       completedOn: e.completedOn ? new Date(e.completedOn) : undefined,
+       dueOn: e.dueOn ? new Date(e.dueOn) : undefined,
       };
     },
     toApi: (e: TodoEntry): ApiTodoEntry => {
-      return {
-        ...e,
-        createdAt: e.createdAt.toISOString(),
-        lastModifiedAt: e.lastModifiedAt ? e.lastModifiedAt.toISOString() : undefined,
-        completedOn: e.completedOn ? e.completedOn.toISOString() : undefined,
-        dueOn: e.dueOn ? e.dueOn.toISOString() : undefined
-      };
+    return {
+    ...e,
+      createdAt: e.createdAt.toISOString(),
+      lastModified: e.lastModified ? e.lastModified.toISOString() : undefined,
+      completedOn: e.completedOn ? e.completedOn.toISOString() : undefined,
+      dueOn: e.dueOn ? e.dueOn.toISOString() : undefined,
+    };
     }
-  }
+    }
 };
 

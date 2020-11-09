@@ -1,8 +1,11 @@
 package com.xpanxion.todo.services;
 
 import com.xpanxion.todo.domain.TodoEntry;
+import com.xpanxion.todo.domain.TodoEntryChanges;
 import com.xpanxion.todo.exceptions.InvalidDueOnException;
+import com.xpanxion.todo.exceptions.InvalidIdException;
 import com.xpanxion.todo.repositories.TodoRepository;
+import org.springframework.beans.InvalidPropertyException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -17,151 +20,170 @@ public class TodoEntryService {
     @Autowired
     TodoRepository todoRepository;
 
-    //get service method
-    public List getTodos() {
+    public List getTodos() throws InvalidIdException {
+        // Decide how we want to sort our database results -- here we want to go by createdAt column in descending order
         Sort sortByCreatedAt = Sort.by(Sort.Direction.DESC, "createdAt");
 
         // Return all found results
+        List<TodoEntry> results = todoRepository.findAll(sortByCreatedAt);
         return todoRepository.findAll(sortByCreatedAt);
-
     }
-    //post by id service method
-    public TodoEntry postTodo(TodoEntry todo) throws com.xpanxion.todo.exceptions.InvalidException {
-        TodoEntry savedEntry = todoRepository.save(todo);
-        return savedEntry;
 
+    public TodoEntry createTodo(TodoEntry newEntry) {
+        //establishes all ISO values to avoid null usage
+        newTodoValues(newEntry);
+
+        // Save the updated version to the database
+        TodoEntry updatedTodo = this.todoRepository.save(newEntry);
+
+        return newEntry;
     }
-    //get by id service method
-    public TodoEntry getTodoById(long id) throws com.xpanxion.todo.exceptions.InvalidException {
 
+    //sets todo values upon creation to avoid nulls
+    private void newTodoValues(TodoEntry newEntry) {
+        Instant currentDate = Instant.now();
+        String currentDateString = currentDate.toString();
 
-            Optional<TodoEntry> originalEntry = todoRepository.findById(id);
-
-            // Check if we found an entry
-            if (originalEntry.isPresent()) {
-                // Use the entry's data
-                TodoEntry entryData = originalEntry.get();
-
-                // Return the to-do entry inside a 200 OK response
-                return entryData;
-            } else {
-                // Return a 404 Not Found status, since we didn't find the entry
-                throw new com.xpanxion.todo.exceptions.InvalidException();
-            }
-
+        newEntry.setCreatedAt(currentDateString);
+        newEntry.setDueOn(Instant.EPOCH.toString());
+        newEntry.setLastModified(Instant.EPOCH.toString());
+        newEntry.setCompletedOn(Instant.EPOCH.toString());
     }
-        //update service method
 
-        public TodoEntry updateTodo ( long id, TodoEntry changes) throws com.xpanxion.todo.exceptions.InvalidException {
-            Optional<TodoEntry> originalEntry = this.todoRepository.findById(id);
+    public TodoEntry getTodo(long id) throws InvalidIdException {
+        // Get our to-do entry from the database
+        Optional<TodoEntry> originalEntry = todoRepository.findById(id);
 
-            // Check if we found an entry
-            if (originalEntry.isPresent()) {
-                // Use the entry's data
-                TodoEntry entryData = originalEntry.get();
+        // Check if we found an entry
+        if (originalEntry.isPresent()) {
+            // Use the entry's data
+            TodoEntry entryData = originalEntry.get();
 
-                // Update the entry
-                this.updateEntry(entryData, changes);
-                // Save the updated version to the database
-                TodoEntry updatedTodo = this.todoRepository.save(entryData);
-
-                // Return the updated full entry
-                return updatedTodo;
-            } else {
-                // throwing invalid id exception
-                throw new com.xpanxion.todo.exceptions.InvalidException();
-            }
+            // get the todo
+            return entryData;
+        } else {
+            // Throwing an invalid ID exception as the ID could not e found in the database
+            throw new InvalidIdException();
         }
+    }
 
-        private void updateEntry (TodoEntry entryData, TodoEntry changes){
-            if (changes.getTitle() != null) {
+    public void deleteTodo(long id) throws InvalidIdException {
+        Optional<TodoEntry> originalEntry = todoRepository.findById(id);
 
-                entryData.setTitle(changes.getTitle());
-
-            }
-            if (changes.getDescription() != null) {
-
-                entryData.setDescription(changes.getDescription());
-
-
-            }
-            if (changes.getCreatedAt() != null) {
-
-                entryData.setCreatedAt(changes.getCreatedAt());
-
-
-            }
-            if (changes.getDueOn() != null) {
-                try {
-                    Instant dueOnDate = Instant.parse(changes.getDueOn());
-                    Instant createAtDate = Instant.parse(entryData.getCreatedAt());
-
-                    if (dueOnDate.isAfter(createAtDate)) {
-                        Instant currentDate = Instant.now();
-                        String currentDateString = currentDate.toString();
-
-                        entryData.setDueOn(currentDateString);
-                    }else{
-                        throw new InvalidDueOnException("Due date was before created on date");
-                    }
-
-                }catch(DateTimeException ex){
-                        throw new RuntimeException("Due date cannot be parsed");
-                    }
-
-
-
-            }
-            if (changes.getCompletedOn() != null) {
-
-                entryData.setCompletedOn(changes.getCompletedOn());
-
-
-            }
-            if (changes.getLastModifiedAt() != null) {
-
-                entryData.setLastModifiedAt(changes.getLastModifiedAt());
-
-
-            }
-            if (changes.getCompleted() != null) {
-
-                entryData.setCompleted(changes.getCompleted());
-
-                // If a todo is marked complete,
-//                if(changes.getCompleted() == true) {
-//                    // the database should be updated with a completed at date
-//                    entryData.setCompletedOn(formatter.format(date));
-//                }
-                // If a todo is marked incomplete,
-//                else {
-//                    // the database should be updated with no completed at date
-//                    entryData.setCompletedOn("Not complete");
-//                }
-
-
-            }
-
+        // Check if we found an entry
+        if (originalEntry.isPresent()) {
+            // Delete the entry we found by ID
+            todoRepository.deleteById(id);
+            //no return required, functions automatically return when completed
+        } else {
+            //Throw an invalid ID exception since we didn't find the entry
+            throw new InvalidIdException();
 
         }
 
-    //delete service method
+    }
 
-    public void deleteTodo ( long id) throws com.xpanxion.todo.exceptions.InvalidException {
-            Optional<TodoEntry> originalEntry = todoRepository.findById(id);
+    public TodoEntry updateTodo(TodoEntryChanges entryChanges) throws InvalidIdException {
+        // Get our to-do entry from the database
+        Optional<TodoEntry> originalEntry = this.todoRepository.findById(entryChanges.getId());
 
-// Check if we found an entry
-            if (originalEntry.isPresent()) {
-                    // Delete the entry we found by ID
+        // Check if we found an entry
+        if (originalEntry.isPresent()) {
+            // Use the entry's data
+            TodoEntry entryData = originalEntry.get();
 
-                    // Return a 204 OK No Content status, we deleted it
-                    this.todoRepository.deleteById(id);
+            // Update the entry
+            this.updateEntry(entryData, entryChanges);
+
+            // Save the updated version to the database
+            TodoEntry updatedTodo = this.todoRepository.save(entryData);
+
+            // Return the updated full entry
+            return updatedTodo;
+        } else {
+            // Throwing an invalid ID exception as the ID could not e found in the database
+            throw new InvalidIdException();
+        }
+
+    }
+
+    private void updateEntry(TodoEntry entryData, TodoEntryChanges changes) throws InvalidPropertyException {
+        boolean hasBeenModified = false;
+
+        //update the entry
+        if (changes.getTitle() != null) {
+            entryData.setTitle(changes.getTitle().get());
+            hasBeenModified = true;
+        }
+        if (changes.getDescription() != null) {
+            entryData.setDescription(changes.getDescription().get());
+            hasBeenModified = true;
+        }
+        if (changes.getCreatedAt() != null) {
+            //
+            //check if this is necessary from edit perspective
+            //
+            //Instant currentDate = Instant.now();
+            //String currentDateString = currentDate.toString();
+
+            //entryData.setCreatedAt(currentDateString);
+        }
+        if (changes.getDueOn() != null) {
+            try {
+                Instant dueOnDate = Instant.parse(changes.getDueOn().get());
+                Instant createdAtDate = Instant.parse(entryData.getCreatedAt());
+
+                if (dueOnDate.isAfter(createdAtDate)) {
+
+                    Instant currentDate = Instant.now();
+                    String currentDateString = currentDate.toString();
+
+                    entryData.setDueOn(currentDateString);
+                } else {
+                    throw new InvalidDueOnException("Due Date is in the past");
+                }
+            } catch (DateTimeException ex) {
+                throw new InvalidDueOnException("Due Date could not be parsed");
+            }
+        }
+        if (changes.getCompleted() != null) {
+            //entryData.setCompletedOn(changes.getCompletedOn());
+
+            Instant currentDate = Instant.now();
+            String currentDateString = currentDate.toString();
+
+            Boolean isComplete = changes.getCompleted().get();
+
+            entryData.setCompleted(isComplete);
+
+            //If a todo is marked complete,
+            if (isComplete == true) {
+                // the database should be updated with a completed at date
+                entryData.setCompletedOn(currentDateString);
+            }
+
+            //If a todo is marked incomplete,
+            else {
+                // the database should be updated with no completed at date
+                entryData.setCompletedOn(null);
+            }
+        }
+
+//        if(changes.getLastModified() != null) {
+//            //entryData.setLastModified(changes.getLastModified());
+//        }
+
+        if (hasBeenModified) {
+            Instant currentDate = Instant.now();
+            String currentDateString = currentDate.toString();
+
+            entryData.setLastModified(currentDateString);
+        }
 
 
-                    } else {
-                    // Return a 404 Not Found status, since we didn't find the entry
-                    throw new com.xpanxion.todo.exceptions.InvalidException();
-                    }
+        //Instant currentDate = Instant.now();
+        //String currentDateString = currentDate.toString();
+        //entryData.setLastModified(currentDateString);
 
-                    }}
-
+    }
+}

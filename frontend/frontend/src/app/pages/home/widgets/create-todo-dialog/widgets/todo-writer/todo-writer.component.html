@@ -16,16 +16,7 @@
       <mat-error *ngIf="formGroup?.controls['description'].invalid">Please enter a description.</mat-error>
     </mat-form-field>
   </div>
-  <div>
-
-      <label for="dueOn">Due date:</label>
-
-      <input type="date" id="dueOn" name="dueOn" placeholder="dueOn" formControlName="dueOn"
-             value="2018-07-22"
-             min="2018-01-01" max="2018-12-31">
-
-
-  </div>
-
-
+  <input type="datetime-local" id="meeting-time"
+         name="meeting-time" value="2018-06-12T19:30"
+         min="2018-06-07T00:00" max="2018-06-14T00:00">
 </div>

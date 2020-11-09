@@ -42,13 +42,13 @@
     <mat-card-content>
       <div class="todo-metadata-fields">
         <mat-grid-list cols="2" rowHeight="2em">
-          <mat-grid-tile title="Created At" class="todo-metadata-field">
+          <mat-grid-tile *ngIf="todo.createdAt" title="Created At" class="todo-metadata-field">
             <mat-icon [inline]="true" class="calendar-icon pr-1">today</mat-icon>
-            <span class="card-created-at">{{todo.createdAt.toDateString()}}</span>
+            <span class="card-created-at">{{todo.createdAt?.toDateString()}}</span>
           </mat-grid-tile>
-          <mat-grid-tile *ngIf="todo.lastModifiedAt" title="Last Modified At" class="todo-metadata-field">
+          <mat-grid-tile *ngIf="todo.lastModified" title="Last Modified At" class="todo-metadata-field">
             <mat-icon [inline]="true" class="calendar-icon pr-1">update</mat-icon>
-            <span class="card-last-modified-at">{{todo.lastModifiedAt?.toDateString()}}</span>
+            <span class="card-last-modified-at">{{todo.lastModified?.toDateString()}}</span>
           </mat-grid-tile>
           <mat-grid-tile *ngIf="todo.completedOn" title="Completed On" class="todo-metadata-field">
             <mat-icon [inline]="true" class="calendar-icon pr-1">event_available</mat-icon>

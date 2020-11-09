@@ -1,9 +1,12 @@
 package com.xpanxion.todo.controllers;
 
 import com.xpanxion.todo.domain.TodoEntry;
+import com.xpanxion.todo.domain.TodoEntryChanges;
+import com.xpanxion.todo.exceptions.InvalidIdException;
+import com.xpanxion.todo.exceptions.ModifyTodoValidatorException;
 import com.xpanxion.todo.repositories.TodoRepository;
-import com.xpanxion.todo.exceptions.InvalidException;
 import com.xpanxion.todo.services.TodoEntryService;
+import com.xpanxion.todo.validators.ModifyTodoValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,23 +19,34 @@ import java.util.List;
 public class TodoController {
     @Autowired
     TodoRepository todoRepository;
+
     @Autowired
     TodoEntryService todoEntryService;
 
+    @Autowired
+    ModifyTodoValidator modifyTodoValidator;
+
     @GetMapping("/todos")
     public ResponseEntity<List<TodoEntry>> getAllTodos() {
-        // Decide how we want to sort our database results -- here we want to go by createdAt column in descending order
+        try {
+             List result = this.todoEntryService.getTodos();
 
-        List<TodoEntry> results = todoEntryService.getTodos();
-        return ResponseEntity.ok().body(results);
+            return ResponseEntity.ok().body(result);
 
+        } catch (NumberFormatException ex) {
+            // Return a 400 Bad Request response, we did not pass a number as an ID
+            return ResponseEntity.badRequest().build();
+        } catch (InvalidIdException ex) {
+            //return a 404 not found response, we did not find a valid entry for the ID
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @PostMapping("/todos")
-    public ResponseEntity<TodoEntry> createTodo(@RequestBody TodoEntry todoPostData) throws InvalidException {
-        // Save our entry to the database and return the saved entry
-        TodoEntry savedEntry = todoEntryService.postTodo(todoPostData);
-        return ResponseEntity.ok().body(savedEntry);
+    public ResponseEntity<TodoEntry> createTodo(@RequestBody TodoEntry newEntry) {
+       TodoEntry savedEntry = this.todoEntryService.createTodo(newEntry);
+
+       return ResponseEntity.ok().body(savedEntry);
     }
 
     @GetMapping(value = "/todos/{id}")
@@ -41,51 +55,50 @@ public class TodoController {
             // Turn our string into an ID number
             long id = Long.parseLong(idString);
 
-            // Get our to-do entry from the database
-            TodoEntry result = this.todoEntryService.getTodoById(id);
+            TodoEntry result = this.todoEntryService.getTodo(id);
             return ResponseEntity.ok().body(result);
         } catch (NumberFormatException ex) {
             // Return a 400 Bad Request response, we did not pass a number as an ID
             return ResponseEntity.badRequest().build();
-        }
-        catch (InvalidException ex) {
-            // Return a 400 Bad Request response, we did not pass a number as an ID
-            return ResponseEntity.notFound().build();
+        } catch (InvalidIdException ex) {
+            //return a 404 not found response, we did not find a valid entry for the ID
+           return ResponseEntity.notFound().build();
         }
     }
 
     @PutMapping(value = "/todos/{id}")
-    public ResponseEntity<TodoEntry> updateTodo(@PathVariable("id") String idString, @RequestBody TodoEntry todo) {
+    public ResponseEntity<Object> updateTodo(@PathVariable("id") String idString, @RequestBody TodoEntry todoChanges) {
         try {
-            // Turn our string into an ID number
-            long id = Long.parseLong(idString);
+            TodoEntryChanges validatedChanges = this.modifyTodoValidator.validate(idString, todoChanges);
 
-            TodoEntry result = this.todoEntryService.updateTodo(id, todo);
+            TodoEntry result = this.todoEntryService.updateTodo(validatedChanges);
+
             return ResponseEntity.ok().body(result);
-        } catch (NumberFormatException ex) {
-            // Return a 400 Bad Request response, we did not pass a number as an ID
+
+        } catch (ModifyTodoValidatorException ex) {
+            System.out.println(ex.getMessage());
             return ResponseEntity.badRequest().build();
-        } catch (InvalidException ex) {
-            //return a 404 not found response, did not find a valid entry for id
+        } catch(InvalidIdException ex) {
+            //return a 404 not Found response, we did not find a valid entry for the ID
             return ResponseEntity.notFound().build();
         }
     }
 
     @DeleteMapping(value = "/todos/{id}")
-    public ResponseEntity<?> deleteTodo(@PathVariable("id") String idString) throws InvalidException{
+    public ResponseEntity<?> deleteTodo(@PathVariable("id") String idString) {
         try {
             // Turn our string into an ID number
             long id = Long.parseLong(idString);
-            this.todoEntryService.deleteTodo(id);
 
+           this.todoEntryService.deleteTodo(id);
+           //Return a 204 OK no content status, we deleted it
             return ResponseEntity.noContent().build();
-
         } catch (NumberFormatException ex) {
             // Return a 400 Bad Request response, we did not pass a number as an ID
             return ResponseEntity.badRequest().build();
-        } catch (InvalidException ex) {
+        }catch(InvalidIdException ex) {
+            //return a 404 not Found response, we did not find a valid entry for the ID
             return ResponseEntity.notFound().build();
-
         }
     }
 }
