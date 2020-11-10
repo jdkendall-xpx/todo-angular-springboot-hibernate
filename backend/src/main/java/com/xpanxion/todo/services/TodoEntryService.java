@@ -99,35 +99,53 @@ public class TodoEntryService {
         if (changes.getDescription() != null) {
             entryData.setDescription(changes.getDescription());
         }
-        if (changes.getCompleted() != null) {
+        if (changes.getCompletedOn() != null) {
 
-            entryData.setCompleted(changes.getCompleted());
+            changes.setCompletedOn(entryData.getCompletedOn());
 
 
-
-            Boolean isComplete = changes.getCompleted();
+        if (changes.getCompleted() !=null) {
+           Boolean isComplete = changes.getCompleted();
             //if a todo is marked complete
 
-            entryData.setCompletedOn();
+           // entryData.setCompletedOn();
 
-            if (isComplete == true) {
+           // if (isComplete == true) {
                 //then the database should be updated with a completed at date
 
                 Instant currentDate = Instant.now();
-                completionDateString:ISODateString = currentDate;
-                {
-                } //currentDate.toString();
-                Object completionDateString;
+                //completionDateString:ISODateString = currentDate;
+                String currentDateString = currentDate.toString();
 
+           // Boolean isComplete = changes.getCompleted().get();
 
-                // if a todo is marked incomplete,
-            //else{
-                    //entryData.setCompleteOn = null;
-                    //then the database should be updated with no completed at date
-                }
+            entryData.setCompleted(isComplete);
 
+            //If a todo is marked complete,
+            if (isComplete == true) {
+                // the database should be updated with a completed at date
+                entryData.setCompletedOn(currentDateString);
+            }
 
+            //If a todo is marked incomplete,
+            else {
+                // the database should be updated with no completed at date
+                entryData.setCompletedOn(null);
+            }
         }
+
+//        if(changes.getLastModified() != null) {
+//            //entryData.setLastModified(changes.getLastModified());
+//        }
+
+          //  if (hasBeenModified) {
+                Instant currentDate = Instant.now();
+                String currentDateString = currentDate.toString();
+
+           //     entryData.setLastModified(currentDateString);
+            }
+
+
 
 
         if (changes.getCreatedAt() != null) {
@@ -137,8 +155,12 @@ public class TodoEntryService {
         if (changes.getDueOn() != null) {
             entryData.setDueOn(changes.getDueOn());
         }
+     //if (changes.getStatus(); false) {
+        // entryData.setCompletedOn();
 
+        }
 
     }
-}
+
+
 

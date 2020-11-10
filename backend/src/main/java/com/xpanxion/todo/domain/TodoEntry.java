@@ -20,31 +20,38 @@ public class TodoEntry {
     @Column(length = 24)
     private String createdAt;
     private String completedOn;
-    private boolean completed;
+    private Boolean completed;
     private String dueOn;
     private String lastModifiedAt;
 
 
     public TodoEntry() {
     }
-
-    public TodoEntry(Long id, String title, String description, String dateCreated, String dateCompleted, Boolean completed, String dateDue, String dateLastModified) {
+    public TodoEntry(Long id, String title, String description, String dateCreated,String dueOn) {
         this.id = id;
         this.title = title;
         this.description = description;
         this.createdAt = dateCreated;
-        this.completedOn = dateCompleted;
-        this.completed = completed;
-        this.dueOn = dateDue;
-        this.lastModifiedAt = dateLastModified;
+        this.dueOn = dueOn;
 
+    }
+
+    public TodoEntry(Long id, String title, String description, String dateCreated,
+                     Boolean completed, String dueOn, String lastModified, String completedOn) {
+        this.id = id;
+        this.title = title;
+        this.description = description;
+        this.createdAt = dateCreated;
+        this.completed = completed;
+        this.dueOn = dueOn;
+       // this.lastModified = lastModified;
+        this.completedOn = completedOn;
 
     }
 
     public Long getId() {
         return id;
     }
-
 
     public void setId(Long id) {
         this.id = id;
@@ -74,15 +81,6 @@ public class TodoEntry {
         this.createdAt = dateCreated;
     }
 
-    public String getCompletedOn() {
-        return completedOn;
-    }
-
-    public void setCompletedOn(String dateCompleted) {
-        this.completedOn = dateCompleted;
-
-    }
-
     public Boolean getCompleted() {
         return completed;
     }
@@ -91,22 +89,15 @@ public class TodoEntry {
         this.completed = completed;
     }
 
+    public String getDueOn() { return dueOn; }
 
-    public String getDueOn() {
-        return dueOn;
-    }
+    public void setDueOn(String dueOn) { this.dueOn = dueOn; }
 
-    public void setDueOn(String dateDue) {
-        this.dueOn = dateDue;
-    }
-public String getLastModifiedAt() {
-        return lastModifiedAt;
-}
-public void setLastModifiedAt(String dateLastModified){
-        this.lastModifiedAt= dateLastModified;
-}
-    public void setCompletedOn() {
-    }
+   // public String getLastModified() { return lastModified; }
 
+   // public void setLastModified(String lastModified) { this.lastModified = lastModified; }
 
+    public String getCompletedOn() { return completedOn; }
+
+    public void setCompletedOn(String completedOn) { this.completedOn = completedOn; }
 }
